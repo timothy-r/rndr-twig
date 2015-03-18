@@ -20,5 +20,10 @@
     "config": {
         "bin-dir": "bin"
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "autoload": {
+      "psr-0": {
+        "Ace\\": "./src"
+      }
+    }
 }

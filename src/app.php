@@ -8,6 +8,8 @@ require_once __DIR__.'/../vendor/autoload.php';
 
 $app = new Application();
 
+$finder = new Ace\TemplateFinder(__DIR__.'/../templates', 'twig');
+
 $app->get('/', function () use ($app) {
     return new Response(json_encode(
         ['name' => 'render', 'desc' => 'Renders templates']),
