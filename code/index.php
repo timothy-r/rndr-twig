@@ -26,4 +26,4 @@ $app->post("{path}", function(Request $req, $path) use ($app){
 
 });
 
-$app->run();
+return $app;
