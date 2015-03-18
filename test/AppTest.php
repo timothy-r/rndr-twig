@@ -25,7 +25,23 @@ class AppTest extends WebTestCase
     public function testPostToNonExistentTemplateFails()
     {
         $client = $this->createClient();
-        $client->request('POST', '/not/there/template.tpl');
+        $client->request('POST', '/not/there/template');
         $this->assertSame(404, $client->getResponse()->getStatusCode());
+    }
+
+    public function testPostToTemplateSuceeds()
+    {
+        $body = json_encode(['name' => 'test']);
+        $client = $this->createClient();
+        $client->request('POST', '/hello', [], [], ['Content-Type' => 'application/json'], $body);
+        $this->assertSame(200, $client->getResponse()->getStatusCode());
+    }
+
+    public function testPostToSubDirectoryTemplateSucceeds()
+    {
+        $body = json_encode(['name' => 'test']);
+        $client = $this->createClient();
+        $client->request('POST', '/sub/hi', [], [], ['Content-Type' => 'application/json'], $body);
+        $this->assertSame(200, $client->getResponse()->getStatusCode());
     }
 }
