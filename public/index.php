@@ -1,4 +1,4 @@
 <?php
 
-$app = require_once __DIR__ . '/../code/index.php';
+$app = require_once __DIR__ . '/../src/app.php';
 $app->run();

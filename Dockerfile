@@ -26,7 +26,10 @@ RUN curl -sS https://getcomposer.org/installer | php \
 CMD ["service php5-fpm start && nginx"]
 
 # Move application files into place
-COPY code/ /home/render/
+COPY src/ /home/render/
+COPY public/ /home/render/
+COPY composer.json /home/render
+COPY composer.lock /home/render
 
 WORKDIR /home/render
 
