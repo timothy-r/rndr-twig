@@ -8,10 +8,17 @@ use Ace\TemplateFinder;
  */
 class TemplateFinderTest extends PHPUnit_Framework_TestCase
 {
-    public function testFindTemplate()
+    public function testFindTemplateReturnsFullPathWhenFound()
     {
         $finder = new TemplateFinder(__DIR__.'/../templates', 'twig');
-        $funky = $finder->find('funky');
-        $this->assertNotNull($funky);
+        $template = $finder->find('hello');
+        $this->assertNotNull($template);
+    }
+
+    public function testFindTemplateReturnsNullWhenNotFound()
+    {
+        $finder = new TemplateFinder(__DIR__.'/../templates', 'twig');
+        $template = $finder->find('nope');
+        $this->assertNull($template);
     }
 }

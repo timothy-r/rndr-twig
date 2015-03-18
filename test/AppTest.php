@@ -21,4 +21,11 @@ class AppTest extends WebTestCase
     {
         return require __DIR__.'/../src/app.php';
     }
+
+    public function testPostToNonExistentTemplateFails()
+    {
+        $client = $this->createClient();
+        $client->request('POST', '/not/there/template.tpl');
+        $this->assertSame(404, $client->getResponse()->getStatusCode());
+    }
 }
