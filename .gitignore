@@ -2,3 +2,4 @@ vendor
 bin
 config
 *.swp
+.idea
