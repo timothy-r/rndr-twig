@@ -29,6 +29,7 @@ CMD ["service php5-fpm start && nginx"]
 COPY src/ /home/render/
 COPY public/ /home/render/
 COPY templates/ /home/render/
+MKDIR /home/render/cache
 
 COPY composer.json /home/render
 COPY composer.lock /home/render

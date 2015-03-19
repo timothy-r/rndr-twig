@@ -12,7 +12,10 @@ $app = new Application();
 
 $app->register(
     new Silex\Provider\TwigServiceProvider(),
-    ['twig.path' => __DIR__.'/../templates']
+    [
+        'twig.path' => __DIR__.'/../templates',
+        'twig.options' => ['cache' => __DIR__ . '/../cache']
+    ]
 );
 
 $logger = new Logger("log");
