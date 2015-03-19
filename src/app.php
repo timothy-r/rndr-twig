@@ -6,15 +6,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Monolog\Logger;
 use Monolog\Handler\ErrorLogHandler;
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 $app = new Application();
 
 $app->register(
     new Silex\Provider\TwigServiceProvider(),
     [
-        'twig.path' => __DIR__.'/../templates',
-        'twig.options' => ['cache' => __DIR__ . '/../cache']
+        'twig.path' => __DIR__.'/templates',
+        'twig.options' => ['cache' => __DIR__ . '/cache']
     ]
 );
 
