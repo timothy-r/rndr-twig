@@ -7,13 +7,11 @@ EXPOSE 80
 RUN apt-get update -qq && \
     apt-get install -y \
     nginx \
-    curl \
     libxml2 \
-    wget \
     php5 \
     php5-cli \
-    php5-fpm \
-    php5-curl
+    php5-fpm
+
 
 # Setup nginx
 ADD build/default /etc/nginx/sites-available/default
@@ -23,7 +21,7 @@ RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 RUN curl -sS https://getcomposer.org/installer | php \
   && mv composer.phar /usr/local/bin/composer
 
-CMD ["service php5-fpm start && nginx"]
+CMD ["php5-fpm && nginx"]
 
 # Move application files into place
 COPY src/ /home/render/

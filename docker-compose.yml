@@ -1,4 +1,4 @@
 render:
-  image: timrodger/render
+  build: .
   ports:
     - "49300:80"
