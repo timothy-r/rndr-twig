@@ -43,7 +43,7 @@ $app->post("{path}", function(Request $req, $path) use ($app){
         // Ought to try to figure out the response content type
         return new Response($result, 200);
     } catch (Exception $ex) {
-        return new Response($ex->getMessage(), 404);
+        return new Response($ex->getMessage(), 404, ['Content-Type' => 'text/plain']);
     }
 })->assert('path', '.+');
 
