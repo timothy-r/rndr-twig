@@ -64,9 +64,9 @@ $app->post("{path}", function(Request $req, $path) use ($app){
     }
 })->assert('path', '.+');
 
-$app->error(function (Exception $e, $code) use($logger) {
+$app->error(function (Exception $e) use($logger) {
     $logger->addError($e->getMessage());
-    return new Response($e->getMessage(), $code, ['Content-Type' => 'text/plain']);
+    return new Response($e->getMessage());
 });
 
 return $app;
