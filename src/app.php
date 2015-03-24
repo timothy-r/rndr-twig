@@ -35,7 +35,11 @@ $app->get('/', function () use ($app) {
 $app->post("{path}", function(Request $req, $path) use ($app){
     // Should use request content-type to convert request into an array and not assume json
     // there's a lib for this in php, right?
-    $req_vars = json_decode($req->getContent(), 1);
+    if ('application/json' == $req->headers->get('Content-Type')){
+        $req_vars = json_decode($req->getContent(), 1);
+    } else {
+        $req_vars = $req->getContent();
+    }
 
     try {
         // try to find the template

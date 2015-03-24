@@ -29,19 +29,27 @@ class AppTest extends WebTestCase
         $this->assertSame(404, $client->getResponse()->getStatusCode());
     }
 
-    public function testPostToTemplateSuceeds()
+    public function testPostJsonToTemplateSuceeds()
     {
         $body = json_encode(['name' => 'test']);
         $client = $this->createClient();
-        $client->request('POST', '/hello', [], [], ['Content-Type' => 'application/json'], $body);
+        $client->request('POST', '/hello', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
         $this->assertSame(200, $client->getResponse()->getStatusCode());
     }
 
-    public function testPostToSubDirectoryTemplateSucceeds()
+    public function testPostJsonToSubDirectoryTemplateSucceeds()
     {
         $body = json_encode(['name' => 'test']);
         $client = $this->createClient();
-        $client->request('POST', '/sub/hi', [], [], ['Content-Type' => 'application/json'], $body);
+        $client->request('POST', '/sub/hi', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
+        $this->assertSame(200, $client->getResponse()->getStatusCode());
+    }
+
+    public function testPostFormToTemplateSuceeds()
+    {
+        $body = ['name' => 'test'];
+        $client = $this->createClient();
+        $client->request('POST', '/hello', [], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded'], $body);
         $this->assertSame(200, $client->getResponse()->getStatusCode());
     }
 }
