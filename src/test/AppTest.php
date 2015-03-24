@@ -31,33 +31,54 @@ class AppTest extends WebTestCase
 
     public function testPostJsonToTemplateSuceeds()
     {
-        $body = json_encode(['name' => 'test']);
+        $name = 'test';
+        $body = json_encode(['name' => $name]);
         $client = $this->createClient();
-        $client->request('POST', '/hello', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
-        $this->assertSame(200, $client->getResponse()->getStatusCode());
+        $crawler = $client->request('POST', '/hello', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
+
+        $this->assertTemplateWasRendered($client, $crawler, $name);
     }
 
     public function testPostJsonToSubDirectoryTemplateSucceeds()
     {
-        $body = json_encode(['name' => 'test']);
+        $name = 'test';
+        $body = json_encode(['name' => $name]);
         $client = $this->createClient();
-        $client->request('POST', '/sub/hi', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
-        $this->assertSame(200, $client->getResponse()->getStatusCode());
+        $crawler = $client->request('POST', '/sub/hi', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
+
+        $this->assertTemplateWasRendered($client, $crawler, $name);
     }
 
     public function testPostFormToTemplateSuceeds()
     {
-        $body = ['name' => 'test'];
+        $name = 'test';
         $client = $this->createClient();
-        $client->request('POST', '/hello', [], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded'], $body);
-        $this->assertSame(200, $client->getResponse()->getStatusCode());
+        $crawler = $client->request('POST', '/hello', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
+        $this->assertTemplateWasRendered($client, $crawler, $name);
     }
 
     public function testPostMultiPartBodyToTemplateSuceeds()
     {
-        $body = ['name' => 'test'];
+        $name = 'test';
         $client = $this->createClient();
-        $client->request('POST', '/hello', [], [], ['CONTENT_TYPE' => 'multipart/form-data'], $body);
+        $crawler = $client->request('POST', '/hello', ['name' => $name], [], ['CONTENT_TYPE' => 'multipart/form-data']);
+
+        $this->assertTemplateWasRendered($client, $crawler, $name);
+    }
+
+    public function testPostQueryParamsToTemplateSuceeds()
+    {
+        $name = 'test';
+        $client = $this->createClient();
+        $crawler = $client->request('POST', "/hello?name=$name");
+
+        $this->assertTemplateWasRendered($client, $crawler, $name);
+    }
+
+    protected function assertTemplateWasRendered($client, $crawler, $name)
+    {
         $this->assertSame(200, $client->getResponse()->getStatusCode());
+
+        $this->assertSame(1, $crawler->filter("html:contains('Hello $name')")->count());
     }
 }

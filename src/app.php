@@ -31,14 +31,27 @@ $app->get('/', function () use ($app) {
 
 /**
  * Catch all post requests to any path
+ * Use variables supplied as json, form data or via query parameters as template vars
  */
 $app->post("{path}", function(Request $req, $path) use ($app){
     // Should use request content-type to convert request into an array and not assume json
     // there's a lib for this in php, right?
-    if ('application/json' == $req->headers->get('Content-Type')){
-        $req_vars = json_decode($req->getContent(), 1);
-    } else {
-        $req_vars = $req->getContent();
+    $req_vars = [];
+
+    switch($req->headers->get('Content-Type')) {
+        case 'application/json':
+            $req_vars = json_decode($req->getContent(), 1);
+            break;
+        case 'application/x-www-form-urlencoded':
+        case 'multipart/form-data':
+            $req_vars = $req->request->all();
+            break;
+    }
+
+    $query = $req->query->all();
+    if (is_array($query)) {
+        // values in $req_vars overwrite those in $query
+        $req_vars = array_merge($query, $req_vars);
     }
 
     try {
