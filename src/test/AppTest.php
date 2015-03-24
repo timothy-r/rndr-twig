@@ -52,4 +52,12 @@ class AppTest extends WebTestCase
         $client->request('POST', '/hello', [], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded'], $body);
         $this->assertSame(200, $client->getResponse()->getStatusCode());
     }
+
+    public function testPostMultiPartBodyToTemplateSuceeds()
+    {
+        $body = ['name' => 'test'];
+        $client = $this->createClient();
+        $client->request('POST', '/hello', [], [], ['CONTENT_TYPE' => 'multipart/form-data'], $body);
+        $this->assertSame(200, $client->getResponse()->getStatusCode());
+    }
 }
