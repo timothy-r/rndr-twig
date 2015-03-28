@@ -76,10 +76,14 @@ $app->put("{path}", function(Request $req, $path) use ($app, $logger, $template_
     $dir = $template_dir . '/' . dirname($path);
 
     if (!is_dir($dir)) {
-        mkdir($dir, 0755, true);
+        if (!mkdir($dir, 0755, true)){
+            throw new Exception("Failed to make directory $dir");
+        }
     }
 
-    file_put_contents($dir . '/' . basename($path), $req->getContent());
+    if (!file_put_contents($dir . '/' . basename($path), $req->getContent())){
+        throw new Exception("Failed to create file " . $dir . '/' . basename($path));
+    }
 
     $app['twig']->clearCacheFiles();
     $app['twig']->clearTemplateCache();
