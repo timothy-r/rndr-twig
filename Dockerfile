@@ -4,13 +4,18 @@ MAINTAINER Tim Rodger <tim.rodger@gmail.com>
 
 EXPOSE 80
 
+RUN apt-get update -qq
+RUN apt-get install -y \
+    python-software-properties \
+    software-properties-common
+
 RUN apt-get update -qq && \
     apt-get install -y \
     nginx \
     php5-cli \
     php5-fpm \
-    curl
-
+    curl \
+    supervisor
 
 # configure server
 
@@ -22,7 +27,7 @@ ADD ./build/php-fpm/php-fpm.conf /etc/php5/fpm/php-fpm.conf
 RUN echo "cgi.fix_pathinfo = 0;" >> /etc/php5/fpm/php.ini
 
 RUN curl -sS https://getcomposer.org/installer | php \
-  && mv composer.phar /usr/local/bin/composer
+  && mv composer.phar /usr/bin/composer
 
 CMD ["supervisord", "--nodaemon"]
 
