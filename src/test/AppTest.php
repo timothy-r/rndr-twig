@@ -77,10 +77,16 @@ class AppTest extends WebTestCase
 
     public function testPutAddsATemplate()
     {
+        $name = 'fork';
         $body = 'A simple template with name: {{ name }}';
         $client = $this->createClient();
-        $crawler = $client->request('PUT', '/simple.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
+        $client->request('PUT', '/simple.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
         $this->assertSame(200, $client->getResponse()->getStatusCode());
+        $client->request('POST', '/simple', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
+        $this->assertSame(200, $client->getResponse()->getStatusCode());
+        $result = $client->getResponse()->getContent();
+
+        $this->assertSame("A simple template with name: $name", $result);
     }
 
     protected function assertTemplateWasRendered($client, $crawler, $name)

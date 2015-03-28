@@ -66,10 +66,20 @@ $app->post("{path}", function(Request $req, $path) use ($app){
 
 /**
  * PUT endpoints add template files
+ * add a template file at path with contents of the request body
  */
-$app->put("{path}", function(Request $req, $path) use ($app) {
+$app->put("{path}", function(Request $req, $path) use ($app, $logger) {
+    $dir = dirname($path);
+    $file = basename($path);
+    $file_path = __DIR__.'/templates' . '/' . $dir . '/' . $file;
 
-    return new Response();
+    //$logger->addDebug("Dir = $dir");
+    if (!is_dir($dir)) {
+        mkdir($dir, 0755, true);
+    }
+
+    file_put_contents($file_path, $req->getContent());
+    return new Response('', 200);
 
 })->assert('path', '.+');
 
