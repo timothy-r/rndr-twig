@@ -9,6 +9,19 @@ use Silex\WebTestCase;
  */
 class AppTest extends WebTestCase
 {
+    private $templates = [];
+
+    /**
+     * bit of a clunky tear down...
+     */
+    public function tearDown()
+    {
+        foreach($this->templates as $template){
+            unlink(__DIR__ .'/../templates/' . $template);
+        }
+        parent::tearDown();
+    }
+
     public function testGetIndexReturnsJson()
     {
         $client = $this->createClient();
@@ -83,9 +96,25 @@ class AppTest extends WebTestCase
         $client->request('PUT', '/simple.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
         $this->assertSame(201, $client->getResponse()->getStatusCode());
 
+        $this->templates []= 'simple.twig';
+
         $client->request('POST', '/simple', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
 
         $this->assertResponseContents($client->getResponse(), 200, "A simple template with name: $name");
+    }
+
+    public function testPutReplacesATemplate()
+    {
+        $body = 'A simple template with name: {{ name }}';
+        $client = $this->createClient();
+        $client->request('PUT', '/simple.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
+        $this->assertSame(201, $client->getResponse()->getStatusCode());
+
+        $this->templates []= 'simple.twig';
+
+        $body = 'A new template with name: {{ name }}';
+        $client->request('PUT', '/simple.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
+        $this->assertSame(200, $client->getResponse()->getStatusCode());
     }
 
     public function testPutAddsATemplateToASubDirectory()
@@ -95,6 +124,7 @@ class AppTest extends WebTestCase
         $client = $this->createClient();
         $client->request('PUT', '/module/sub-module/simple.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
         $this->assertSame(201, $client->getResponse()->getStatusCode());
+        $this->templates []= 'module/sub-module/simple.twig';
         $client->request('POST', '/module/sub-module/simple', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
 
         $this->assertResponseContents($client->getResponse(), 200, "A simple template with name: $name");

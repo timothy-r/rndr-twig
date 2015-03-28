@@ -81,14 +81,17 @@ $app->put("{path}", function(Request $req, $path) use ($app, $logger, $template_
         }
     }
 
-    if (!file_put_contents($dir . '/' . basename($path), $req->getContent())){
+    $file_path = $dir . '/' . basename($path);
+
+    $created = !file_exists($file_path);
+    if (!file_put_contents($file_path, $req->getContent())){
         throw new Exception("Failed to create file " . $dir . '/' . basename($path));
     }
 
     $app['twig']->clearCacheFiles();
     $app['twig']->clearTemplateCache();
 
-    return new Response('', 201);
+    return new Response('', $created ? 201 : 200);
 
 })->assert('path', '.+');
 
