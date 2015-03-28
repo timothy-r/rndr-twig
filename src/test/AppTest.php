@@ -75,6 +75,14 @@ class AppTest extends WebTestCase
         $this->assertTemplateWasRendered($client, $crawler, $name);
     }
 
+    public function testPutAddsATemplate()
+    {
+        $body = 'A simple template with name: {{ name }}';
+        $client = $this->createClient();
+        $crawler = $client->request('PUT', '/simple.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
+        $this->assertSame(200, $client->getResponse()->getStatusCode());
+    }
+
     protected function assertTemplateWasRendered($client, $crawler, $name)
     {
         $this->assertSame(200, $client->getResponse()->getStatusCode());

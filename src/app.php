@@ -64,6 +64,15 @@ $app->post("{path}", function(Request $req, $path) use ($app){
     }
 })->assert('path', '.+');
 
+/**
+ * PUT endpoints add template files
+ */
+$app->put("{path}", function(Request $req, $path) use ($app) {
+
+    return new Response();
+
+})->assert('path', '.+');
+
 $app->error(function (Exception $e) use($logger) {
     $logger->addError($e->getMessage());
     return new Response($e->getMessage());
