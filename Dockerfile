@@ -34,6 +34,10 @@ CMD ["supervisord", "--nodaemon"]
 # Move application files into place
 COPY src/ /home/render/
 
+# make cache directory writable by web server
+RUN chown www-data:www-data /home/render/cache/
+RUN chmod +w /home/render/cache
+
 WORKDIR /home/render
 
 # Install dependencies
