@@ -82,11 +82,47 @@ class AppTest extends WebTestCase
         $client = $this->createClient();
         $client->request('PUT', '/simple.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
         $this->assertSame(200, $client->getResponse()->getStatusCode());
-        $client->request('POST', '/simple', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
-        $this->assertSame(200, $client->getResponse()->getStatusCode());
-        $result = $client->getResponse()->getContent();
 
-        $this->assertSame("A simple template with name: $name", $result);
+        $client->request('POST', '/simple', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
+
+        $this->assertResponseContents($client->getResponse(), "A simple template with name: $name");
+    }
+
+    public function testPutAddsATemplateToASubDirectory()
+    {
+        $name = 'fork';
+        $body = 'A simple template with name: {{ name }}';
+        $client = $this->createClient();
+        $client->request('PUT', '/module/sub-module/simple.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
+        $this->assertSame(200, $client->getResponse()->getStatusCode());
+        $client->request('POST', '/module/sub-module/simple', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
+
+        $this->assertResponseContents($client->getResponse(), "A simple template with name: $name");
+    }
+
+    public function testPutOverwritesTemplates()
+    {
+        $name = 'fork';
+        $body = 'A simple template with name: {{ name }}';
+        $client = $this->createClient();
+        $client->request('PUT', '/module/sub-module/simple.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
+        $client->request('POST', '/module/sub-module/simple', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
+
+        $this->assertResponseContents($client->getResponse(), "A simple template with name: $name");
+
+        $client = $this->createClient();
+        $body = 'A different template: {{ name }}';
+        $client->request('PUT', '/module/sub-module/simple.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
+        $client->request('POST', '/module/sub-module/simple', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
+
+        $this->assertResponseContents($client->getResponse(), "A different template: $name");
+
+    }
+
+    protected function assertResponseContents($response, $expected)
+    {
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame($expected, $response->getContent());
     }
 
     protected function assertTemplateWasRendered($client, $crawler, $name)

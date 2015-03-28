@@ -10,10 +10,12 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 $app = new Application();
 
+$template_dir = __DIR__.'/templates';
+
 $app->register(
     new Silex\Provider\TwigServiceProvider(),
     [
-        'twig.path' => __DIR__.'/templates',
+        'twig.path' => $template_dir,
         'twig.options' => ['cache' => __DIR__ . '/cache']
     ]
 );
@@ -67,18 +69,21 @@ $app->post("{path}", function(Request $req, $path) use ($app){
 /**
  * PUT endpoints add template files
  * add a template file at path with contents of the request body
+ * clear the cache
  */
-$app->put("{path}", function(Request $req, $path) use ($app, $logger) {
-    $dir = dirname($path);
-    $file = basename($path);
-    $file_path = __DIR__.'/templates' . '/' . $dir . '/' . $file;
+$app->put("{path}", function(Request $req, $path) use ($app, $logger, $template_dir) {
 
-    //$logger->addDebug("Dir = $dir");
+    $dir = $template_dir . '/' . dirname($path);
+
     if (!is_dir($dir)) {
         mkdir($dir, 0755, true);
     }
 
-    file_put_contents($file_path, $req->getContent());
+    file_put_contents($dir . '/' . basename($path), $req->getContent());
+
+    $app['twig']->clearCacheFiles();
+    $app['twig']->clearTemplateCache();
+
     return new Response('', 200);
 
 })->assert('path', '.+');
