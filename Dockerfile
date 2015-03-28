@@ -15,7 +15,8 @@ RUN apt-get update -qq && \
     php5-cli \
     php5-fpm \
     curl \
-    supervisor
+    supervisor \
+    git
 
 # configure server
 
