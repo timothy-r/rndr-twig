@@ -10,7 +10,8 @@ RUN apt-get update -qq && \
     libxml2 \
     php5 \
     php5-cli \
-    php5-fpm
+    php5-fpm \
+    curl
 
 
 # Setup nginx
