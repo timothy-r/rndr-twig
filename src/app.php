@@ -88,7 +88,7 @@ $app->put("{path}", function(Request $req, $path) use ($app, $logger, $template_
     $app['twig']->clearCacheFiles();
     $app['twig']->clearTemplateCache();
 
-    return new Response('', 200);
+    return new Response('', 201);
 
 })->assert('path', '.+');
 
