@@ -1,35 +1,44 @@
-server {
-    listen 80 default_server;
-    listen [::]:80 default_server ipv6only=on;
+error_log /dev/stderr info;
 
-    server_name silex;
+http {
 
-    root /home/render/public;
-    index index.php;
+    access_log /dev/stdout combined buffer=16k;
 
-    # Make site accessible from http://localhost/
-    server_name localhost;
+    server {
+        listen 80 default_server;
+        listen [::]:80 default_server ipv6only=on;
 
-    # site root is redirected to the app boot script
-    location = / {
-        try_files @site @site;
+        server_name silex;
+
+        root /home/render/public;
+        index index.php;
+
+        # Make site accessible from http://localhost/
+        server_name localhost;
+
+        # site root is redirected to the app boot script
+        location = / {
+            try_files @site @site;
+        }
+
+        # all other locations try other files first and go to our front controller if none of them exists
+        location / {
+            try_files $uri $uri/ @site;
+        }
+
+        # return 404 for all php files as we do have a front controller
+        location ~ \.php$ {
+            return 404;
+        }
+
+        location @site {
+            fastcgi_pass   unix:/var/run/php5-fpm.sock;
+            include fastcgi_params;
+            fastcgi_param  SCRIPT_FILENAME $document_root/index.php;
+
+            # uncomment when running via https
+            # fastcgi_param HTTPS on;
+        }
     }
 
-    # all other locations try other files first and go to our front controller if none of them exists
-    location / {
-        try_files $uri $uri/ @site;
-    }
-
-    # return 404 for all php files as we do have a front controller
-    location ~ \.php$ {
-        return 404;
-    }
-
-    location @site {
-        fastcgi_pass   unix:/var/run/php5-fpm.sock;
-        include fastcgi_params;
-        fastcgi_param  SCRIPT_FILENAME $document_root/index.php;
-        #uncomment when running via https
-        #fastcgi_param HTTPS on;
-    }
 }
