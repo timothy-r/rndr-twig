@@ -52,6 +52,20 @@ class AppTest extends WebTestCase
         $this->assertTemplateWasRendered($client, $crawler, $name);
     }
 
+    public function testPostNestedJsonObjectToTemplateSuceeds()
+    {
+        $name = 'test';
+        $email = 'trial@others.net';
+        $template = 'User.name: {{ user.name }} User.email: {{ user.email }}';
+        $data = json_encode(['user' => ['name' => $name, 'email' => $email]]);
+        $client = $this->createClient();
+        $client->request('PUT', '/complex.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $template);
+        $this->templates []= 'complex.twig';
+        $client->request('POST', '/complex', [], [], ['CONTENT_TYPE' => 'application/json'], $data);
+
+        $this->assertResponseContents($client->getResponse(), 200, "User.name: $name User.email: $email");
+    }
+
     public function testPostJsonToSubDirectoryTemplateSucceeds()
     {
         $name = 'test';
