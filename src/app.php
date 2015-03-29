@@ -5,6 +5,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Monolog\Logger;
 use Monolog\Handler\ErrorLogHandler;
+use Ace\Request\Message as RequestMessage;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -51,23 +52,9 @@ $app->get("{path}", function(Request $req, $path) use ($app, $template_dir){
 $app->post("{path}", function(Request $req, $path) use ($app){
     // Should use request content-type to convert request into an array and not assume json
     // there's a lib for this in php, right?
-    $req_vars = [];
 
-    switch($req->headers->get('Content-Type')) {
-        case 'application/json':
-            $req_vars = json_decode($req->getContent(), 1);
-            break;
-        case 'application/x-www-form-urlencoded':
-        case 'multipart/form-data':
-            $req_vars = $req->request->all();
-            break;
-    }
-
-    $query = $req->query->all();
-    if (is_array($query)) {
-        // values in $req_vars overwrite those in $query
-        $req_vars = array_merge($query, $req_vars);
-    }
+    $message = new RequestMessage($req);
+    $req_vars = $message->getData();
 
     try {
         // try to find the template
