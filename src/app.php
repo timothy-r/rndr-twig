@@ -49,12 +49,11 @@ $app->get("{path}", function(Request $req, $path) use ($app, $logger, $store){
 $app->post("{path}", function(Request $req, $path) use ($app){
 
     $message = new RequestMessage($req);
-    $req_vars = $message->getData();
     $path = '/' . $path;
 
     try {
         // Render the template
-        $result = $app['twig']->loadTemplate($path)->render($req_vars);
+        $result = $app['twig']->loadTemplate($path)->render($message->getData());
         // Ought to try to figure out the response content type
         return new Response($result, 200);
     } catch (Exception $ex) {

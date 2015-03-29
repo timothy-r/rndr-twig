@@ -48,7 +48,7 @@ class Redis implements StoreInterface
     {
         try {
             $result = $this->client->hmget($path, 'content', 'type', 'last-modified');
-            if (is_array($result)) {
+            if (is_array($result) && !is_null($result[0]) && !is_null($result[1]) && !is_null($result[2])) {
                 return ['content' => $result[0], 'type' => $result[1], 'last-modified' => $result[2]];
             } else {
                 throw new NotFoundException("'$path' not found");

@@ -26,7 +26,7 @@ class Factory
 
     /**
      * If an in memory store has been explicitly configured
-     * then use that otherwise use redis
+     * then use that, otherwise use redis
      *
      * @return StoreInterface
      */

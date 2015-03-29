@@ -9,6 +9,8 @@ use Twig_Error_Loader;
 /**
  * @author timrodger
  * Date: 29/03/15
+ *
+ * Loads Twig templates from a Store instance
  */
 class StoreLoader implements Twig_LoaderInterface
 {
@@ -84,7 +86,7 @@ class StoreLoader implements Twig_LoaderInterface
         try {
             return $this->store->get($name);
         } catch (NotFoundException $nex) {
-            throw new Twig_Error_Loader($ex->getMessage());
+            throw new Twig_Error_Loader($nex->getMessage());
         } catch (UnavailableException $ex){
             throw new Twig_Error_Loader($ex->getMessage());
         }
