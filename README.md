@@ -1,7 +1,7 @@
 # render
 A service that renders templates
 
-An example:
+## Example
 
 Run the app using (in the public directory)
     
@@ -29,20 +29,24 @@ Or even
         http://127.0.0.1:8080/hello.twig?name=Brian
 
 
-* Missing template files receive a 404 response. 
-* Requests to render templates must be POSTs.
+* Missing template files receive a 404 response 
+* Requests to render templates must be POSTs
 
-## Maintaining templates
+## Adding templates
 
 To add a template to the service make a PUT request
+
     curl -X PUT \
         -d @template.twig \
         http://127.0.0.1/new-template.twig
         
 The template will be available at http://127.0.0.1/new-template.twig
 
+## Viewing template contents
+
 To view the raw contents of a template make a GET request
-    curl -X PUT \
+
+    curl \
         http://127.0.0.1/new-template.twig
         
 The response body will be the unrendered template text
