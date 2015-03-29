@@ -13,7 +13,9 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 $app = new Application();
 $config = new Config();
-$store = new RedisStore(new Client($config->getStoreDsn()));
+$store = new RedisStore(
+    new Client($config->getStoreDsn(), ['exceptions' => true])
+);
 
 $template_dir = __DIR__.'/templates';
 
