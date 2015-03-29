@@ -2,3 +2,8 @@ render:
   build: .
   ports:
     - "49300:80"
+  links:
+    - redis
+
+redis:
+  image: redis
