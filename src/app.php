@@ -34,9 +34,14 @@ $app->get('/', function () use ($app) {
 $app->get("{path}", function(Request $req, $path) use ($app, $template_dir){
 
     $file_path = $template_dir . '/' . $path;
-    $status_code = is_file($file_path) ? 200 : 404;
+    $status_code = 404;
+    $body = '';
+    if (is_file($file_path)){
+        $status_code = 200;
+        $body = file_get_contents($file_path);
+    }
 
-    return new Response('', $status_code);
+    return new Response($body, $status_code);
 })->assert('path', '.+');
 
 /**

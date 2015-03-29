@@ -148,6 +148,17 @@ class AppTest extends WebTestCase
         $this->assertSame(200, $client->getResponse()->getStatusCode());
     }
 
+    public function testCanGetRawTemplateContents()
+    {
+        $body = 'A simple template with name: {{ name }}';
+        $client = $this->createClient();
+        $client->request('PUT', '/a-template.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
+        $this->templates []= 'a-template.twig';
+        $client->request('GET', '/a-template.twig');
+
+        $this->assertResponseContents($client->getResponse(), 200, $body);
+    }
+
     protected function assertResponseContents($response, $expected_status, $expected_body)
     {
         $this->assertSame($expected_status, $response->getStatusCode());
