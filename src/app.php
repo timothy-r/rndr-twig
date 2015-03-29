@@ -7,18 +7,13 @@ use Monolog\Logger;
 use Monolog\Handler\ErrorLogHandler;
 
 use Ace\Request\Message as RequestMessage;
-use Ace\Store\Redis as RedisStore;
-use Ace\Twig\StoreLoader as StoreLoader;
-
-use Predis\Client;
+use Ace\Twig\StoreLoader;
+use Ace\Store\Factory as StoreFactory;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
 $app = new Application();
-$config = new Config();
-$store = new RedisStore(
-    new Client($config->getStoreDsn(), ['exceptions' => true])
-);
+$factory = new StoreFactory(new Config());
 
 $app->register(
     new Silex\Provider\TwigServiceProvider(),
@@ -26,6 +21,8 @@ $app->register(
         'twig.options' => ['cache' => __DIR__ . '/cache']
     ]
 );
+
+$store = $factory->create();
 
 $app['twig']->setLoader(new StoreLoader($store));
 

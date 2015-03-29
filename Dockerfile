@@ -18,7 +18,7 @@ RUN apt-get update -qq && \
     supervisor \
     git
 
-# configure server
+# configure server applications
 
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 ADD ./build/nginx/default /etc/nginx/sites-enabled/default
@@ -41,12 +41,8 @@ RUN chmod +x /home/render/run.sh
 RUN chown www-data:www-data /home/render/cache/
 RUN chmod +w /home/render/cache
 
-# make templates directory writable by web server
-RUN chown www-data:www-data /home/render/templates/
-RUN chmod +w /home/render/templates
-
 # remove any development cruft
-RUN rm -rf /home/render/cache/* /home/render/templates/* /home/render/vendor/*
+RUN rm -rf /home/render/cache/* /home/render/vendor/*
 
 WORKDIR /home/render
 

@@ -10,17 +10,6 @@ class AppTest extends WebTestCase
 {
     private $templates = [];
 
-    /**
-     * bit of a clunky tear down...
-     */
-    public function tearDown()
-    {
-        foreach($this->templates as $template){
-            unlink(__DIR__ .'/../templates/' . $template);
-        }
-        parent::tearDown();
-    }
-
     public function testGetIndexReturnsJson()
     {
         $client = $this->createClient();
@@ -31,7 +20,7 @@ class AppTest extends WebTestCase
 
     public function createApplication()
     {
-        putenv('REDIS_PORT=tcp://192.168.59.103:6379');
+        putenv('REDIS_PORT=');
         return require __DIR__.'/../app.php';
     }
 
@@ -52,7 +41,7 @@ class AppTest extends WebTestCase
         $this->assertTemplateWasRendered($client, $crawler, $name);
     }
 
-    public function testPostNestedJsonObjectToTemplateSuceeds()
+    public function testPostNestedJsonObjectToTemplateSucceeds()
     {
         $name = 'test';
         $email = 'trial@others.net';
@@ -76,7 +65,7 @@ class AppTest extends WebTestCase
         $this->assertTemplateWasRendered($client, $crawler, $name);
     }
 
-    public function testPostFormToTemplateSuceeds()
+    public function testPostFormToTemplateSucceeds()
     {
         $name = 'test';
         $client = $this->createClient();
@@ -84,7 +73,7 @@ class AppTest extends WebTestCase
         $this->assertTemplateWasRendered($client, $crawler, $name);
     }
 
-    public function testPostMultiPartBodyToTemplateSuceeds()
+    public function testPostMultiPartBodyToTemplateSucceeds()
     {
         $name = 'test';
         $client = $this->createClient();
@@ -93,7 +82,7 @@ class AppTest extends WebTestCase
         $this->assertTemplateWasRendered($client, $crawler, $name);
     }
 
-    public function testPostQueryParamsToTemplateSuceeds()
+    public function testPostQueryParamsToTemplateSucceeds()
     {
         $name = 'test';
         $client = $this->createClient();
@@ -182,7 +171,6 @@ class AppTest extends WebTestCase
     protected function assertTemplateWasRendered($client, $crawler, $name)
     {
         $this->assertSame(200, $client->getResponse()->getStatusCode());
-
         $this->assertSame(1, $crawler->filter("html:contains('Hello $name')")->count());
     }
 }
