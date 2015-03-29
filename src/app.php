@@ -43,13 +43,6 @@ $app->get('/', function () use ($app) {
  */
 $app->get("{path}", function(Request $req, $path) use ($app, $logger, $store){
 
-//    $file_path = $template_dir . '/' . $path;
-//    $status_code = 404;
-//    $body = '';
-//    if (is_file($file_path)){
-//        $status_code = 200;
-//        $body = file_get_contents($file_path);
-//    }
     $path = '/' . $path;
     $logger->addDebug("Getting template at $path");
     $template = $store->get($path);
@@ -81,28 +74,8 @@ $app->post("{path}", function(Request $req, $path) use ($app){
 $app->put("{path}", function(Request $req, $path) use ($app, $logger, $store) {
 
     $path = '/' . $path;
-
     $logger->addDebug("New template at $path");
-
     $store->set($path, $req->getContent(), $req->headers->get('Content-Type'));
-
-//    $dir = $template_dir . '/' . dirname($path);
-//
-//    if (!is_dir($dir)) {
-//        if (!mkdir($dir, 0755, true)){
-//            throw new Exception("Failed to make directory $dir");
-//        }
-//    }
-//
-//    $file_path = $dir . '/' . basename($path);
-//
-//    $created = !file_exists($file_path);
-//    if (!file_put_contents($file_path, $req->getContent())){
-//        throw new Exception("Failed to create file " . $dir . '/' . basename($path));
-//    }
-
-   // $app['twig']->clearCacheFiles();
-   // $app['twig']->clearTemplateCache();
 
     return new Response('', 200);
 
