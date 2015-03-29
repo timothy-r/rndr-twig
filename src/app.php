@@ -5,8 +5,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Monolog\Logger;
 use Monolog\Handler\ErrorLogHandler;
+
 use Ace\Request\Message as RequestMessage;
 use Ace\Store\Redis as RedisStore;
+use Ace\Twig\StoreLoader as StoreLoader;
+
 use Predis\Client;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -16,6 +19,7 @@ $config = new Config();
 $store = new RedisStore(
     new Client($config->getStoreDsn(), ['exceptions' => true])
 );
+$loader = new StoreLoader($store);
 
 $template_dir = __DIR__.'/templates';
 
@@ -26,6 +30,8 @@ $app->register(
         'twig.options' => ['cache' => __DIR__ . '/cache']
     ]
 );
+
+$app['twig']->addLoader($loader);
 
 $logger = new Logger("log");
 $logger->pushHandler(new ErrorLogHandler());
@@ -57,7 +63,8 @@ $app->post("{path}", function(Request $req, $path) use ($app){
 
     $message = new RequestMessage($req);
     $req_vars = $message->getData();
-
+    $path = '/' . $path;
+    
     try {
         // Render the template
         $result = $app['twig']->loadTemplate($path)->render($req_vars);

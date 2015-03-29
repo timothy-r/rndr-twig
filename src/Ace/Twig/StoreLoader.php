@@ -31,12 +31,8 @@ class StoreLoader implements Twig_LoaderInterface
      */
     public function getSource($name)
     {
-        try {
-            $template = $this->store->get($name);
-            return $template['content'];
-        } catch (UnavailableException $ex){
-            throw new Twig_Error_Loader($ex->getMessage());
-        }
+        $template = $this->get($name);
+        return $template['content'];
     }
 
     /**
@@ -46,12 +42,8 @@ class StoreLoader implements Twig_LoaderInterface
      */
     public function getCacheKey($name)
     {
-        try {
-            $this->store->get($name);
-            return md5($name);
-        } catch (UnavailableException $ex){
-            throw new Twig_Error_Loader($ex->getMessage());
-        }
+        $this->get($name);
+        return md5($name);
     }
 
     /**
@@ -62,14 +54,14 @@ class StoreLoader implements Twig_LoaderInterface
      */
     public function isFresh($name, $time)
     {
-        try {
-            $template = $this->store->get($name);
-            return $template['last-modified'] < $time;
-        } catch (UnavailableException $ex){
-            throw new Twig_Error_Loader($ex->getMessage());
-        }
+        $template = $this->get($name);
+        return $template['last-modified'] < $time;
     }
 
+    /**
+     * @param string $name
+     * @return boolean
+     */
     public function exists($name)
     {
         try {
@@ -77,6 +69,21 @@ class StoreLoader implements Twig_LoaderInterface
             return true;
         } catch (UnavailableException $ex) {
             return false;
+        }
+    }
+
+    /**
+     * Get the template data - converts Store exceptions into Twig exceptions
+     * @param $name
+     * @return array
+     * @throws Twig_Error_Loader
+     */
+    private function get($name)
+    {
+        try {
+            return $this->store->get($name);
+        } catch (UnavailableException $ex){
+            throw new Twig_Error_Loader($ex->getMessage());
         }
     }
 }
