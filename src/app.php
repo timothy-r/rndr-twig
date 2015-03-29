@@ -32,6 +32,9 @@ $app->get('/', function () use ($app) {
     );
 });
 
+/**
+ * Respond with the raw template file contents
+ */
 $app->get("{path}", function(Request $req, $path) use ($app, $template_dir){
 
     $file_path = $template_dir . '/' . $path;
@@ -46,18 +49,15 @@ $app->get("{path}", function(Request $req, $path) use ($app, $template_dir){
 })->assert('path', '.+');
 
 /**
- * Catch all post requests to any path
- * Use variables supplied as json, form data or via query parameters as template vars
+ * Render the template specified by path using the request data
  */
 $app->post("{path}", function(Request $req, $path) use ($app){
-    // Should use request content-type to convert request into an array and not assume json
-    // there's a lib for this in php, right?
 
     $message = new RequestMessage($req);
     $req_vars = $message->getData();
 
     try {
-        // try to find the template
+        // Render the template
         $result = $app['twig']->loadTemplate($path)->render($req_vars);
         // Ought to try to figure out the response content type
         return new Response($result, 200);
@@ -67,9 +67,7 @@ $app->post("{path}", function(Request $req, $path) use ($app){
 })->assert('path', '.+');
 
 /**
- * PUT endpoints add template files
- * add a template file at path with contents of the request body
- * clear the cache
+ * Add a template file at path with contents of the request body
  */
 $app->put("{path}", function(Request $req, $path) use ($app, $logger, $template_dir) {
 
