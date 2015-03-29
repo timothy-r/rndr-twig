@@ -30,4 +30,19 @@ Or even
 
 
 * Missing template files receive a 404 response. 
-* All requests must be POSTs.
+* Requests to render templates must be POSTs.
+
+## Maintaining templates
+
+To add a template to the service make a PUT request
+    curl -X PUT \
+        -d @template.twig \
+        http://127.0.0.1/new-template.twig
+        
+The template will be available at http://127.0.0.1/new-template.twig
+
+To view the raw contents of a template make a GET request
+    curl -X PUT \
+        http://127.0.0.1/new-template.twig
+        
+The response body will be the unrendered template text
