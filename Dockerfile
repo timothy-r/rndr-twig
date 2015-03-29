@@ -30,10 +30,12 @@ RUN echo "cgi.fix_pathinfo = 0;" >> /etc/php5/fpm/php.ini
 RUN curl -sS https://getcomposer.org/installer | php \
   && mv composer.phar /usr/bin/composer
 
-CMD ["supervisord", "--nodaemon"]
+CMD ["/home/render/run.sh"]
 
 # Move application files into place
 COPY src/ /home/render/
+
+RUN chmod +x /home/render/run.sh
 
 # make cache directory writable by web server
 RUN chown www-data:www-data /home/render/cache/
