@@ -31,6 +31,7 @@ class AppTest extends WebTestCase
 
     public function createApplication()
     {
+        putenv('REDIS_PORT=tcp://192.168.59.103:6379');
         return require __DIR__.'/../app.php';
     }
 

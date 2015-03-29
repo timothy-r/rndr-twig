@@ -6,10 +6,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Monolog\Logger;
 use Monolog\Handler\ErrorLogHandler;
 use Ace\Request\Message as RequestMessage;
+use Ace\Store\Redis as RedisStore;
+use Predis\Client;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
 $app = new Application();
+$config = new Config();
+$store = new RedisStore(new Client($config->getStoreDsn()));
 
 $template_dir = __DIR__.'/templates';
 
@@ -67,29 +71,35 @@ $app->post("{path}", function(Request $req, $path) use ($app){
 })->assert('path', '.+');
 
 /**
- * Add a template file at path with contents of the request body
+ * Add a template at path with contents of the request body
  */
-$app->put("{path}", function(Request $req, $path) use ($app, $logger, $template_dir) {
+$app->put("{path}", function(Request $req, $path) use ($app, $logger, $store) {
 
-    $dir = $template_dir . '/' . dirname($path);
+    $path = '/' . $path;
 
-    if (!is_dir($dir)) {
-        if (!mkdir($dir, 0755, true)){
-            throw new Exception("Failed to make directory $dir");
-        }
-    }
+    $logger->addDebug("New template at $path");
 
-    $file_path = $dir . '/' . basename($path);
+    $store->set($path, $req->getContent(), $req->headers->get('Content-Type'));
 
-    $created = !file_exists($file_path);
-    if (!file_put_contents($file_path, $req->getContent())){
-        throw new Exception("Failed to create file " . $dir . '/' . basename($path));
-    }
+//    $dir = $template_dir . '/' . dirname($path);
+//
+//    if (!is_dir($dir)) {
+//        if (!mkdir($dir, 0755, true)){
+//            throw new Exception("Failed to make directory $dir");
+//        }
+//    }
+//
+//    $file_path = $dir . '/' . basename($path);
+//
+//    $created = !file_exists($file_path);
+//    if (!file_put_contents($file_path, $req->getContent())){
+//        throw new Exception("Failed to create file " . $dir . '/' . basename($path));
+//    }
 
-    $app['twig']->clearCacheFiles();
-    $app['twig']->clearTemplateCache();
+   // $app['twig']->clearCacheFiles();
+   // $app['twig']->clearTemplateCache();
 
-    return new Response('', $created ? 201 : 200);
+    return new Response('', 200);
 
 })->assert('path', '.+');
 
