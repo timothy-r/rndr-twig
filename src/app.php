@@ -24,7 +24,6 @@ $app->register(
 );
 
 $store = $factory->create();
-
 $app['twig']->setLoader(new StoreLoader($store));
 
 $logger = new Logger('log');

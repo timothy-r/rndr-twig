@@ -72,6 +72,23 @@ class RedisStoreUnitTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException Ace\Store\NotFoundException
+     */
+    public function testGetTemplateThrowsExceptionWhenNotFound()
+    {
+        $this->givenAMockClient();
+        $this->givenAStore();
+
+        $path = '/template.twig';
+
+        $this->mock_client->expects($this->any())
+            ->method('hmget')
+            ->with($path)
+            ->will($this->returnValue(null));
+
+        $this->store->get($path);
+    }
+    /**
      * @expectedException Ace\Store\UnavailableException
      */
     public function testGetTemplateThrowsExceptionsOnError()
