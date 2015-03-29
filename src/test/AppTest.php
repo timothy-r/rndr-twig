@@ -8,37 +8,34 @@ use Silex\WebTestCase;
  */
 class AppTest extends WebTestCase
 {
-    private $templates = [];
-
-    public function testGetIndexReturnsJson()
-    {
-        $client = $this->createClient();
-        $client->request('GET', '/');
-        $this->assertSame(200, $client->getResponse()->getStatusCode());
-        $this->assertSame('application/json', $client->getResponse()->headers->get('Content-Type'));
-    }
+    private $client;
 
     public function createApplication()
     {
-        putenv('REDIS_PORT=');
+        putenv('REDIS_PORT=MEMORY');
         return require __DIR__.'/../app.php';
     }
 
     public function testPostToNonExistentTemplateFails()
     {
-        $client = $this->createClient();
-        $client->request('POST', '/not/there/template');
-        $this->assertSame(404, $client->getResponse()->getStatusCode());
+        $this->givenAClient();
+        $this->client->request('POST', '/not/there/template');
+        $this->thenTheResponseIs404();
     }
 
     public function testPostJsonToTemplateSuceeds()
     {
         $name = 'test';
+        $template = 'Hello {{ name }}';
         $body = json_encode(['name' => $name]);
-        $client = $this->createClient();
-        $crawler = $client->request('POST', '/hello.twig', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
 
-        $this->assertTemplateWasRendered($client, $crawler, $name);
+        $this->givenAClient();
+        $this->givenATemplateExists('/hello.twig', $template);
+
+        $this->client->request('POST', '/hello.twig', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
+
+        $this->thenTheResponseIsSuccess();
+        $this->assertResponseContents("Hello $name");
     }
 
     public function testPostNestedJsonObjectToTemplateSucceeds()
@@ -46,131 +43,164 @@ class AppTest extends WebTestCase
         $name = 'test';
         $email = 'trial@others.net';
         $template = 'User.name: {{ user.name }} User.email: {{ user.email }}';
-        $data = json_encode(['user' => ['name' => $name, 'email' => $email]]);
-        $client = $this->createClient();
-        $client->request('PUT', '/complex.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $template);
-        $this->templates []= 'complex.twig';
-        $client->request('POST', '/complex.twig', [], [], ['CONTENT_TYPE' => 'application/json'], $data);
+        $body = json_encode(['user' => ['name' => $name, 'email' => $email]]);
 
-        $this->assertResponseContents($client->getResponse(), 200, "User.name: $name User.email: $email");
+        $this->givenAClient();
+        $this->givenATemplateExists('/complex.twig', $template);
+
+        $this->client->request('POST', '/complex.twig', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
+
+        $this->thenTheResponseIsSuccess();
+        $this->assertResponseContents("User.name: $name User.email: $email");
     }
 
     public function testPostJsonToSubDirectoryTemplateSucceeds()
     {
         $name = 'test';
+        $template = 'Hello {{ name }}';
         $body = json_encode(['name' => $name]);
-        $client = $this->createClient();
-        $crawler = $client->request('POST', '/sub/hi.twig', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
+        $this->givenAClient();
+        $this->givenATemplateExists('/sub/hi.twig', $template);
 
-        $this->assertTemplateWasRendered($client, $crawler, $name);
+        $this->client->request('POST', '/sub/hi.twig', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
+
+        $this->thenTheResponseIsSuccess();
+        $this->assertResponseContents("Hello $name");
     }
 
     public function testPostFormToTemplateSucceeds()
     {
         $name = 'test';
-        $client = $this->createClient();
-        $crawler = $client->request('POST', '/hello.twig', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
-        $this->assertTemplateWasRendered($client, $crawler, $name);
+        $template = 'Hello {{ name }}';
+        $this->givenAClient();
+        $this->givenATemplateExists('/hello.twig', $template);
+
+        $this->client->request('POST', '/hello.twig', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
+
+        $this->thenTheResponseIsSuccess();
+        $this->assertResponseContents("Hello $name");
     }
 
     public function testPostMultiPartBodyToTemplateSucceeds()
     {
         $name = 'test';
-        $client = $this->createClient();
-        $crawler = $client->request('POST', '/hello.twig', ['name' => $name], [], ['CONTENT_TYPE' => 'multipart/form-data']);
+        $template = 'Hello {{ name }}';
+        $this->givenAClient();
+        $this->givenATemplateExists('/hello.twig', $template);
 
-        $this->assertTemplateWasRendered($client, $crawler, $name);
+        $this->client->request('POST', '/hello.twig', ['name' => $name], [], ['CONTENT_TYPE' => 'multipart/form-data']);
+
+        $this->thenTheResponseIsSuccess();
+        $this->assertResponseContents("Hello $name");
     }
 
     public function testPostQueryParamsToTemplateSucceeds()
     {
         $name = 'test';
-        $client = $this->createClient();
-        $crawler = $client->request('POST', "/hello.twig?name=$name");
+        $template = 'Hello {{ name }}';
+        $this->givenAClient();
+        $this->givenATemplateExists('/hello.twig', $template);
 
-        $this->assertTemplateWasRendered($client, $crawler, $name);
+        $this->client->request('POST', "/hello.twig?name=$name");
+
+        $this->thenTheResponseIsSuccess();
+        $this->assertResponseContents("Hello $name");
     }
 
     public function testPutAddsATemplate()
     {
         $name = 'fork';
-        $body = 'A simple template with name: {{ name }}';
-        $client = $this->createClient();
-        $client->request('PUT', '/simple.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
-        $this->assertSame(201, $client->getResponse()->getStatusCode());
+        $template = 'A simple template with name: {{ name }}';
+        $this->givenAClient();
+        $this->givenATemplateExists('/simple.twig', $template);
 
-        $this->templates []= 'simple.twig';
+        $this->thenTheResponseIsSuccess();
 
-        $client->request('POST', '/simple.twig', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
+        $this->client->request('POST', '/simple.twig', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
 
-        $this->assertResponseContents($client->getResponse(), 200, "A simple template with name: $name");
+        $this->thenTheResponseIsSuccess();
+        $this->assertResponseContents("A simple template with name: $name");
     }
 
     public function testPutReplacesATemplate()
     {
-        $body = 'A simple template with name: {{ name }}';
-        $client = $this->createClient();
-        $client->request('PUT', '/simple.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
-        $this->assertSame(201, $client->getResponse()->getStatusCode());
-
-        $this->templates []= 'simple.twig';
+        $template = 'A simple template with name: {{ name }}';
+        $this->givenAClient();
+        $this->givenATemplateExists('/simple.twig', $template);
+        $this->thenTheResponseIsSuccess();
 
         $body = 'A new template with name: {{ name }}';
-        $client->request('PUT', '/simple.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
-        $this->assertSame(200, $client->getResponse()->getStatusCode());
+        $this->client->request('PUT', '/simple.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
+        $this->thenTheResponseIsSuccess();
     }
 
     public function testPutAddsATemplateToASubDirectory()
     {
         $name = 'fork';
-        $body = 'A simple template with name: {{ name }}';
-        $client = $this->createClient();
-        $client->request('PUT', '/module/sub-module/simple.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
-        $this->assertSame(201, $client->getResponse()->getStatusCode());
-        $this->templates []= 'module/sub-module/simple.twig';
-        $client->request('POST', '/module/sub-module/simple.twig', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
+        $template = 'A simple template with name: {{ name }}';
+        $this->givenAClient();
+        $this->givenATemplateExists('/module/sub-module/simple.twig', $template);
 
-        $this->assertResponseContents($client->getResponse(), 200, "A simple template with name: $name");
+        $this->thenTheResponseIsSuccess();
+
+        $this->client->request('POST', '/module/sub-module/simple.twig', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
+
+        $this->thenTheResponseIsSuccess();
+        $this->assertResponseContents("A simple template with name: $name");
     }
 
     public function testHeadReturns404WhenTemplateDoesNotExist()
     {
-        $client = $this->createClient();
-        $client->request('HEAD', '/not-a-template.twig');
-        $this->assertSame(404, $client->getResponse()->getStatusCode());
+        $this->givenAClient();
+        $this->client->request('HEAD', '/not-a-template.twig');
+        $this->thenTheResponseIs404();
     }
 
     public function testHeadReturns200WhenTemplateDoesExist()
     {
-        $body = 'A simple template with name: {{ name }}';
-        $client = $this->createClient();
-        $client->request('PUT', '/a-template.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
-        $this->templates []= 'a-template.twig';
-        $client->request('HEAD', '/a-template.twig');
+        $template = 'A simple template with name: {{ name }}';
+        $this->givenAClient();
+        $this->givenATemplateExists('/a-template.twig', $template);
 
-        $this->assertSame(200, $client->getResponse()->getStatusCode());
+        $this->client->request('HEAD', '/a-template.twig');
+
+        $this->thenTheResponseIsSuccess();
     }
 
     public function testCanGetRawTemplateContents()
     {
-        $body = 'A simple template with name: {{ name }}';
-        $client = $this->createClient();
-        $client->request('PUT', '/a-template.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
-        $this->templates []= 'a-template.twig';
-        $client->request('GET', '/a-template.twig');
+        $template = 'A simple template with name: {{ name }}';
+        $this->givenAClient();
+        $this->givenATemplateExists('/a-template.twig', $template);
 
-        $this->assertResponseContents($client->getResponse(), 200, $body);
+        $this->client->request('GET', '/a-template.twig');
+
+        $this->thenTheResponseIsSuccess();
+        $this->assertResponseContents($template);
     }
 
-    protected function assertResponseContents($response, $expected_status, $expected_body)
+    private function givenAClient()
     {
-        $this->assertSame($expected_status, $response->getStatusCode());
-        $this->assertSame($expected_body, $response->getContent());
+        $this->client = $this->createClient();
     }
 
-    protected function assertTemplateWasRendered($client, $crawler, $name)
+    private function givenATemplateExists($name, $content)
     {
-        $this->assertSame(200, $client->getResponse()->getStatusCode());
-        $this->assertSame(1, $crawler->filter("html:contains('Hello $name')")->count());
+        $this->client->request('PUT', $name, [], [], ['CONTENT_TYPE' => 'text/twig'], $content);
+    }
+
+    private function thenTheResponseIsSuccess()
+    {
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+    }
+
+    private function thenTheResponseIs404()
+    {
+        $this->assertSame(404, $this->client->getResponse()->getStatusCode());
+    }
+
+    protected function assertResponseContents($expected_body)
+    {
+        $this->assertSame($expected_body, $this->client->getResponse()->getContent());
     }
 }

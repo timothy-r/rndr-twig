@@ -9,6 +9,7 @@ use Monolog\Handler\ErrorLogHandler;
 use Ace\Request\Message as RequestMessage;
 use Ace\Twig\StoreLoader;
 use Ace\Store\Factory as StoreFactory;
+use Ace\Store\NotFoundException;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -29,24 +30,18 @@ $app['twig']->setLoader(new StoreLoader($store));
 $logger = new Logger('log');
 $logger->pushHandler(new ErrorLogHandler());
 
-$app->get('/', function () use ($app) {
-    return new Response(json_encode(
-        ['name' => 'render', 'desc' => 'Renders templates']),
-        200,
-        ['Content-Type' => 'application/json']
-    );
-});
-
 /**
  * Respond with the raw template file contents
  */
 $app->get("{path}", function(Request $req, $path) use ($app, $logger, $store){
 
     $path = '/' . $path;
-    $logger->addDebug("Getting template at $path");
-    $template = $store->get($path);
-
-    return new Response($template['content'], 200);
+    try {
+        $template = $store->get($path);
+        return new Response($template['content'], 200);
+    } catch (NotFoundException $ex) {
+        return new Response('', 404);
+    }
 })->assert('path', '.+');
 
 /**
@@ -74,7 +69,6 @@ $app->post("{path}", function(Request $req, $path) use ($app){
 $app->put("{path}", function(Request $req, $path) use ($app, $logger, $store) {
 
     $path = '/' . $path;
-    $logger->addDebug("New template at $path");
     $store->set($path, $req->getContent(), $req->headers->get('Content-Type'));
 
     return new Response('', 200);

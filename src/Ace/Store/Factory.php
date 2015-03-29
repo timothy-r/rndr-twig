@@ -25,17 +25,21 @@ class Factory
     }
 
     /**
+     * If an in memory store has been explicitly configured
+     * then use that otherwise use redis
+     *
      * @return StoreInterface
      */
     public function create()
     {
         $dsn = $this->config->getStoreDsn();
-        if (!empty($dsn)) {
-            return new RedisStore(
-                new Client($this->config->getStoreDsn(), ['exceptions' => true])
-            );
-        } else {
+
+        if ('MEMORY' == $dsn) {
             return new MemoryStore;
+        } else {
+            return new RedisStore(
+                new Client($dsn, ['exceptions' => true])
+            );
         }
     }
 }
