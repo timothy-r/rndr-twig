@@ -130,6 +130,24 @@ class AppTest extends WebTestCase
         $this->assertResponseContents($client->getResponse(), 200, "A simple template with name: $name");
     }
 
+    public function testHeadReturns404WhenTemplateDoesNotExist()
+    {
+        $client = $this->createClient();
+        $client->request('HEAD', '/not-a-template.twig');
+        $this->assertSame(404, $client->getResponse()->getStatusCode());
+    }
+
+    public function testHeadReturns200WhenTemplateDoesExist()
+    {
+        $body = 'A simple template with name: {{ name }}';
+        $client = $this->createClient();
+        $client->request('PUT', '/a-template.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
+        $this->templates []= 'a-template.twig';
+        $client->request('HEAD', '/a-template.twig');
+
+        $this->assertSame(200, $client->getResponse()->getStatusCode());
+    }
+
     protected function assertResponseContents($response, $expected_status, $expected_body)
     {
         $this->assertSame($expected_status, $response->getStatusCode());

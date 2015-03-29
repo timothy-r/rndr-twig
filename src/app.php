@@ -31,6 +31,14 @@ $app->get('/', function () use ($app) {
     );
 });
 
+$app->get("{path}", function(Request $req, $path) use ($app, $template_dir){
+
+    $file_path = $template_dir . '/' . $path;
+    $status_code = is_file($file_path) ? 200 : 404;
+
+    return new Response('', $status_code);
+})->assert('path', '.+');
+
 /**
  * Catch all post requests to any path
  * Use variables supplied as json, form data or via query parameters as template vars
