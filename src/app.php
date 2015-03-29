@@ -71,7 +71,7 @@ $app->post("{path}", function(Request $req, $path) use ($app){
 
     try {
         // try to find the template
-        $result = $app['twig']->loadTemplate($path . '.twig')->render($req_vars);
+        $result = $app['twig']->loadTemplate($path)->render($req_vars);
         // Ought to try to figure out the response content type
         return new Response($result, 200);
     } catch (Exception $ex) {

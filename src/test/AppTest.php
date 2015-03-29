@@ -47,7 +47,7 @@ class AppTest extends WebTestCase
         $name = 'test';
         $body = json_encode(['name' => $name]);
         $client = $this->createClient();
-        $crawler = $client->request('POST', '/hello', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
+        $crawler = $client->request('POST', '/hello.twig', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
 
         $this->assertTemplateWasRendered($client, $crawler, $name);
     }
@@ -61,7 +61,7 @@ class AppTest extends WebTestCase
         $client = $this->createClient();
         $client->request('PUT', '/complex.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $template);
         $this->templates []= 'complex.twig';
-        $client->request('POST', '/complex', [], [], ['CONTENT_TYPE' => 'application/json'], $data);
+        $client->request('POST', '/complex.twig', [], [], ['CONTENT_TYPE' => 'application/json'], $data);
 
         $this->assertResponseContents($client->getResponse(), 200, "User.name: $name User.email: $email");
     }
@@ -71,7 +71,7 @@ class AppTest extends WebTestCase
         $name = 'test';
         $body = json_encode(['name' => $name]);
         $client = $this->createClient();
-        $crawler = $client->request('POST', '/sub/hi', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
+        $crawler = $client->request('POST', '/sub/hi.twig', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
 
         $this->assertTemplateWasRendered($client, $crawler, $name);
     }
@@ -80,7 +80,7 @@ class AppTest extends WebTestCase
     {
         $name = 'test';
         $client = $this->createClient();
-        $crawler = $client->request('POST', '/hello', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
+        $crawler = $client->request('POST', '/hello.twig', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
         $this->assertTemplateWasRendered($client, $crawler, $name);
     }
 
@@ -88,7 +88,7 @@ class AppTest extends WebTestCase
     {
         $name = 'test';
         $client = $this->createClient();
-        $crawler = $client->request('POST', '/hello', ['name' => $name], [], ['CONTENT_TYPE' => 'multipart/form-data']);
+        $crawler = $client->request('POST', '/hello.twig', ['name' => $name], [], ['CONTENT_TYPE' => 'multipart/form-data']);
 
         $this->assertTemplateWasRendered($client, $crawler, $name);
     }
@@ -97,7 +97,7 @@ class AppTest extends WebTestCase
     {
         $name = 'test';
         $client = $this->createClient();
-        $crawler = $client->request('POST', "/hello?name=$name");
+        $crawler = $client->request('POST', "/hello.twig?name=$name");
 
         $this->assertTemplateWasRendered($client, $crawler, $name);
     }
@@ -112,7 +112,7 @@ class AppTest extends WebTestCase
 
         $this->templates []= 'simple.twig';
 
-        $client->request('POST', '/simple', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
+        $client->request('POST', '/simple.twig', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
 
         $this->assertResponseContents($client->getResponse(), 200, "A simple template with name: $name");
     }
@@ -139,7 +139,7 @@ class AppTest extends WebTestCase
         $client->request('PUT', '/module/sub-module/simple.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
         $this->assertSame(201, $client->getResponse()->getStatusCode());
         $this->templates []= 'module/sub-module/simple.twig';
-        $client->request('POST', '/module/sub-module/simple', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
+        $client->request('POST', '/module/sub-module/simple.twig', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
 
         $this->assertResponseContents($client->getResponse(), 200, "A simple template with name: $name");
     }
