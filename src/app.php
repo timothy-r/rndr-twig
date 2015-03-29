@@ -19,21 +19,17 @@ $config = new Config();
 $store = new RedisStore(
     new Client($config->getStoreDsn(), ['exceptions' => true])
 );
-$loader = new StoreLoader($store);
-
-$template_dir = __DIR__.'/templates';
 
 $app->register(
     new Silex\Provider\TwigServiceProvider(),
     [
-        'twig.path' => $template_dir,
         'twig.options' => ['cache' => __DIR__ . '/cache']
     ]
 );
 
-$app['twig']->addLoader($loader);
+$app['twig']->setLoader(new StoreLoader($store));
 
-$logger = new Logger("log");
+$logger = new Logger('log');
 $logger->pushHandler(new ErrorLogHandler());
 
 $app->get('/', function () use ($app) {
@@ -64,7 +60,7 @@ $app->post("{path}", function(Request $req, $path) use ($app){
     $message = new RequestMessage($req);
     $req_vars = $message->getData();
     $path = '/' . $path;
-    
+
     try {
         // Render the template
         $result = $app['twig']->loadTemplate($path)->render($req_vars);
