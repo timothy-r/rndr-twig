@@ -39,17 +39,20 @@ $app->get('/', function () use ($app) {
 /**
  * Respond with the raw template file contents
  */
-$app->get("{path}", function(Request $req, $path) use ($app, $template_dir){
+$app->get("{path}", function(Request $req, $path) use ($app, $logger, $store){
 
-    $file_path = $template_dir . '/' . $path;
-    $status_code = 404;
-    $body = '';
-    if (is_file($file_path)){
-        $status_code = 200;
-        $body = file_get_contents($file_path);
-    }
+//    $file_path = $template_dir . '/' . $path;
+//    $status_code = 404;
+//    $body = '';
+//    if (is_file($file_path)){
+//        $status_code = 200;
+//        $body = file_get_contents($file_path);
+//    }
+    $path = '/' . $path;
+    $logger->addDebug("Getting template at $path");
+    $template = $store->get($path);
 
-    return new Response($body, $status_code);
+    return new Response($template['content'], 200);
 })->assert('path', '.+');
 
 /**
