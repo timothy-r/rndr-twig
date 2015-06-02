@@ -30,7 +30,7 @@ class RedisStoreUnitTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Ace\Store\UnavailableException
+     * @expectedException \Ace\Store\UnavailableException
      */
     public function testSetTemplateThrowsExceptionOnError()
     {
@@ -72,7 +72,7 @@ class RedisStoreUnitTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Ace\Store\NotFoundException
+     * @expectedException \Ace\Store\NotFoundException
      */
     public function testGetTemplateThrowsExceptionWhenNotFound()
     {
@@ -88,8 +88,9 @@ class RedisStoreUnitTest extends \PHPUnit_Framework_TestCase
 
         $this->store->get($path);
     }
+
     /**
-     * @expectedException Ace\Store\UnavailableException
+     * @expectedException \Ace\Store\UnavailableException
      */
     public function testGetTemplateThrowsExceptionsOnError()
     {
@@ -106,10 +107,43 @@ class RedisStoreUnitTest extends \PHPUnit_Framework_TestCase
         $this->store->get($path);
     }
 
+    public function testDeleteRemovesATemplate()
+    {
+        $this->givenAMockClient();
+        $this->givenAStore();
+        $path = '/template.twig';
+
+        $this->mock_client->expects($this->once())
+            ->method('del')
+            ->with($path)
+            ->will($this->returnValue(0));
+
+        $result = $this->store->delete($path);
+        $this->assertSame(0, $result);
+    }
+
+    /**
+     * @expectedException \Ace\Store\UnavailableException
+     */
+    public function testDeleteThrowsAnExceptionOnError()
+    {
+        $this->givenAMockClient();
+        $this->givenAStore();
+        $path = '/template.twig';
+
+        $this->mock_client->expects($this->once())
+            ->method('del')
+            ->with($path)
+            ->will($this->throwException(new ServerException()));
+
+        $this->store->delete($path);
+    }
+
+
     private function givenAMockClient()
     {
         $this->mock_client = $this->getMockBuilder('Predis\Client')
-            ->setMethods(['hmset', 'hmget'])
+            ->setMethods(['hmset', 'hmget', 'del'])
             ->disableOriginalConstructor()
             ->getMock();
     }

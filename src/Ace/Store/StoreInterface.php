@@ -9,4 +9,6 @@ interface StoreInterface
     public function set($path, $contents, $type);
 
     public function get($path);
+
+    public function delete($path);
 }

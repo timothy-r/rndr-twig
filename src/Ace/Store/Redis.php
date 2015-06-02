@@ -57,4 +57,20 @@ class Redis implements StoreInterface
             throw new UnavailableException($ex->getMessage());
         }
     }
+
+    /**
+     * Remove the named template
+     *
+     * @param $path
+     * @return int
+     * @throws UnavailableException
+     */
+    public function delete($path)
+    {
+        try {
+            return $this->client->del($path);
+        } catch (ServerException $ex){
+            throw new UnavailableException($ex->getMessage());
+        }
+    }
 }

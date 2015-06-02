@@ -134,7 +134,6 @@ class StoreLoaderUnitTest extends \PHPUnit_Framework_TestCase
     private function givenAMockStore()
     {
         $this->mock_store = $this->getMockBuilder('Ace\Store\StoreInterface')
-            ->setMethods(['get', 'set'])
             ->disableOriginalConstructor()
             ->getMock();
     }

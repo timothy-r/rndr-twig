@@ -36,4 +36,9 @@ class Memory implements StoreInterface
             throw new NotFoundException;
         }
     }
+
+    public function delete($path)
+    {
+        unset($this->data[$path]);
+    }
 }
