@@ -4,6 +4,7 @@ use Predis\Client;
 use Config;
 use Ace\Store\Redis as RedisStore;
 use Ace\Store\Memory as MemoryStore;
+use Ace\Store\Unavailable as UnavailableStore;
 
 /**
  * @author timrodger
@@ -36,6 +37,8 @@ class Factory
 
         if ('MEMORY' == $dsn) {
             return new MemoryStore;
+        } else if ('UNAVAILABLE' == $dsn) {
+            return new UnavailableStore();
         } else {
             return new RedisStore(
                 new Client($dsn, ['exceptions' => true])

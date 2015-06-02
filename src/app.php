@@ -64,7 +64,7 @@ $app->post("{path}", function(Request $req, $path) use ($app){
 /**
  * Add a template at path with contents of the request body
  */
-$app->put("{path}", function(Request $req, $path) use ($app, $logger, $store) {
+$app->put("{path}", function(Request $req, $path) use ($store) {
 
     $path = '/' . $path;
     $store->set($path, $req->getContent(), $req->headers->get('Content-Type'));
@@ -72,6 +72,19 @@ $app->put("{path}", function(Request $req, $path) use ($app, $logger, $store) {
     return new Response('', 200);
 
 })->assert('path', '.+');
+
+/**
+ * Removes a template
+ */
+$app->delete("{path}", function($path) use ($store) {
+
+    $path = '/' . $path;
+    $store->delete($path);
+
+    return new Response('', 200);
+
+})->assert('path', '.+');
+
 
 $app->error(function (Exception $e) use($logger) {
     $logger->addError($e->getMessage());

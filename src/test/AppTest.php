@@ -20,6 +20,7 @@ class AppTest extends WebTestCase
     {
         $this->givenAClient();
         $this->client->request('POST', '/not/there/template');
+
         $this->thenTheResponseIs404();
     }
 
@@ -177,6 +178,32 @@ class AppTest extends WebTestCase
 
         $this->thenTheResponseIsSuccess();
         $this->assertResponseContents($template);
+    }
+
+    public function testDeleteRemovesATemplate()
+    {
+        $template = 'A simple template with name: {{ name }}';
+        $this->givenAClient();
+        $this->givenATemplateExists('/a-template.twig', $template);
+
+        $this->client->request('DELETE', '/a-template.twig');
+
+        $this->thenTheResponseIsSuccess();
+
+        $this->client->request('HEAD', '/a-template.twig');
+        $this->thenTheResponseIs404();
+    }
+
+    public function testDeleteRespondsWithSuccessWhenTemplatesMissing()
+    {
+        $this->givenAClient();
+
+        $this->client->request('HEAD', '/a-missing-template.twig');
+        $this->thenTheResponseIs404();
+
+        $this->client->request('DELETE', '/a-missing-template.twig');
+
+        $this->thenTheResponseIsSuccess();
     }
 
     private function givenAClient()

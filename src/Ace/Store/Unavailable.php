@@ -1,18 +1,12 @@
 <?php namespace Ace\Store;
 
-use Ace\Store\NotFoundException;
-
+use Ace\Store\UnavailableException;
 /**
  * @author timrodger
  * Date: 29/03/15
  */
-class Memory implements StoreInterface
+class Unavailable implements StoreInterface
 {
-    /**
-     * @var array
-     */
-    private $data = [];
-
     /**
      * Set the contents for this template path
      * set last modified property to now
@@ -23,7 +17,7 @@ class Memory implements StoreInterface
      */
     public function set($path, $content, $type)
     {
-        $this->data[$path] = ['content' => $content, 'type' => $type, 'last-modified' => time()];
+        throw new UnavailableException('Store is not available');
     }
 
     /**
@@ -32,15 +26,11 @@ class Memory implements StoreInterface
      */
     public function get($path)
     {
-        if (isset($this->data[$path])) {
-            return $this->data[$path];
-        } else {
-            throw new NotFoundException;
-        }
+        throw new UnavailableException('Store is not available');
     }
 
     public function delete($path)
     {
-        unset($this->data[$path]);
+        throw new UnavailableException('Store is not available');
     }
 }
