@@ -37,9 +37,9 @@ $app->get("{path}", function(Request $req, $path) use ($app, $logger, $store){
     $path = '/' . $path;
     try {
         $template = $store->get($path);
-        return new Response($template['content'], 200);
+        return new Response($template['content'], 200, ["Content-Type" => $template['type']]);
     } catch (NotFoundException $ex) {
-        return new Response('', 404);
+        return new Response("Template '$path' not found", 404, ["Content-Type" => 'text/plain']);
     }
 })->assert('path', '.+');
 
