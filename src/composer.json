@@ -27,6 +27,6 @@
       "psr-0": {
         "Ace\\": "."
       },
-      "files" : ["Config.php"]
+      "files" : ["Config.php", "Router.php", "ErrorHandler.php"]
     }
 }

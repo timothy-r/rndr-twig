@@ -1,94 +1,30 @@
 <?php
 
 use Silex\Application;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Monolog\Logger;
-use Monolog\Handler\ErrorLogHandler;
 
-use Ace\Request\Message as RequestMessage;
-use Ace\Twig\StoreLoader;
-use Ace\Store\Factory as StoreFactory;
-use Ace\Store\NotFoundException;
+use Ace\Provider\Store as StoreProvider;
+use Ace\Provider\Twig as TwigProvider;
+use Ace\Provider\Log as LogProvider;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
 $app = new Application();
-$factory = new StoreFactory(new Config());
 
-$app->register(
-    new Silex\Provider\TwigServiceProvider(),
-    [
-        'twig.options' => ['cache' => __DIR__ . '/cache']
-    ]
-);
+$app['config'] = new Config(__DIR__);
 
-$store = $factory->create();
-$app['twig']->setLoader(new StoreLoader($store));
+$log_provider = new LogProvider();
+$log_provider->register($app);
 
-$logger = new Logger('log');
-$logger->pushHandler(new ErrorLogHandler());
+$store_provider = new StoreProvider();
+$store_provider->register($app);
 
-/**
- * Respond with the raw template file contents
- */
-$app->get("{path}", function(Request $req, $path) use ($app, $logger, $store){
+$twig_provider = new TwigProvider();
+$twig_provider->register($app);
 
-    $path = '/' . $path;
-    try {
-        $template = $store->get($path);
-        return new Response($template['content'], 200, ["Content-Type" => $template['type']]);
-    } catch (NotFoundException $ex) {
-        return new Response("Template '$path' not found", 404, ["Content-Type" => 'text/plain']);
-    }
-})->assert('path', '.+');
+$error_handler = new ErrorHandler();
+$error_handler->register($app);
 
-/**
- * Render the template specified by path using the request data
- */
-$app->post("{path}", function(Request $req, $path) use ($app){
-
-    $message = new RequestMessage($req);
-    $path = '/' . $path;
-
-    try {
-        // Render the template
-        $result = $app['twig']->loadTemplate($path)->render($message->getData());
-        // Ought to try to figure out the response content type
-        return new Response($result, 200);
-    } catch (Exception $ex) {
-        return new Response($ex->getMessage(), 404, ['Content-Type' => 'text/plain']);
-    }
-})->assert('path', '.+');
-
-/**
- * Add a template at path with contents of the request body
- */
-$app->put("{path}", function(Request $req, $path) use ($store) {
-
-    $path = '/' . $path;
-    $store->set($path, $req->getContent(), $req->headers->get('Content-Type'));
-
-    return new Response('', 200);
-
-})->assert('path', '.+');
-
-/**
- * Removes a template
- */
-$app->delete("{path}", function($path) use ($store) {
-
-    $path = '/' . $path;
-    $store->delete($path);
-
-    return new Response('', 200);
-
-})->assert('path', '.+');
-
-
-$app->error(function (Exception $e) use($logger) {
-    $logger->addError($e->getMessage());
-    return new Response($e->getMessage());
-});
+$router = new Router();
+$router->register($app);
 
 return $app;
