@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 class Message
 {
     /**
-     * @var Symfony\Component\HttpFoundation\Request
+     * @var Request
      */
     private $request;
 

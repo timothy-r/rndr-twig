@@ -5,6 +5,7 @@ use Silex\Application;
 use Ace\Provider\Store as StoreProvider;
 use Ace\Provider\Twig as TwigProvider;
 use Ace\Provider\Log as LogProvider;
+use Ace\Provider\Route as RouteProvider;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -24,7 +25,7 @@ $twig_provider->register($app);
 $error_handler = new ErrorHandler();
 $error_handler->register($app);
 
-$router = new Router();
+$router = new RouteProvider();
 $router->register($app);
 
 return $app;

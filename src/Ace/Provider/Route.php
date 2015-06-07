@@ -1,22 +1,23 @@
-<?php
+<?php namespace Ace\Provider;
+
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use Ace\Request\Message as RequestMessage;
 use Ace\Store\NotFoundException;
+use Exception;
 
 /**
  * Configures routing
  */
-class Router
+class Route
 {
     /**
      * @param Application $app
      */
     public function register(Application $app)
     {
-
         /**
          * Respond with the raw template file contents
          */
