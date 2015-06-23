@@ -1,6 +1,7 @@
 <?php namespace Ace\Provider;
 
 use Silex\Application;
+use Silex\ServiceProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -11,7 +12,7 @@ use Exception;
 /**
  * Configures routing
  */
-class Route
+class Route implements ServiceProviderInterface
 {
     /**
      * @param Application $app
@@ -73,6 +74,11 @@ class Route
             return new Response('', 200);
 
         })->assert('path', '.+');
+
+    }
+
+    public function boot(Application $app)
+    {
 
     }
 }

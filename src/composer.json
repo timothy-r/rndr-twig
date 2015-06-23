@@ -26,7 +26,6 @@
     "autoload": {
       "psr-0": {
         "Ace\\": "."
-      },
-      "files" : ["Config.php", "ErrorHandler.php"]
+      }
     }
 }

@@ -1,9 +1,10 @@
-<?php
+<?php namespace Ace;
+
 /*
  * @author timrodger
  * Date: 29/03/15
  */
-class Config
+class Configuration
 {
     /**
      * @var string

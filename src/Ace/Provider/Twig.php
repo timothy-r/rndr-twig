@@ -3,13 +3,13 @@
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Ace\Twig\StoreLoader;
+use Silex\ServiceProviderInterface;
 
 /**
  * Provides Twig services to the application
  */
-class Twig
+class Twig implements ServiceProviderInterface
 {
-
     public function register(Application $app)
     {
         $cache_dir = $app['config']->getBaseDir() . '/cache';
@@ -22,5 +22,10 @@ class Twig
         );
 
         $app['twig']->setLoader(new StoreLoader($app['template.store']));
+    }
+
+    public function boot(Application $app)
+    {
+
     }
 }

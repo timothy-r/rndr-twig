@@ -1,7 +1,7 @@
 <?php namespace Ace\Store;
 
 use Predis\Client;
-use Config;
+use Ace\Configuration;
 use Ace\Store\Redis as RedisStore;
 use Ace\Store\Memory as MemoryStore;
 use Ace\Store\Unavailable as UnavailableStore;
@@ -13,14 +13,14 @@ use Ace\Store\Unavailable as UnavailableStore;
 class Factory
 {
     /**
-     * @var Config
+     * @var Configuration
      */
     private $config;
 
     /**
-     * @param Config $config
+     * @param Configuration $config
      */
-    public function __construct(Config $config)
+    public function __construct(Configuration $config)
     {
        $this->config = $config;
     }
