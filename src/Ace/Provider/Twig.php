@@ -10,12 +10,16 @@ use Silex\ServiceProviderInterface;
  */
 class Twig implements ServiceProviderInterface
 {
+    private $dir;
 
-    public function register(Application $app) {}
-
-    public function boot(Application $app)
+    public function __construct($dir)
     {
-        $cache_dir = $app['config']->getBaseDir() . '/cache';
+        $this->dir = $dir;
+    }
+
+    public function register(Application $app)
+    {
+        $cache_dir = $this->dir . '/cache';
 
         $app->register(
             new TwigServiceProvider(),
@@ -23,7 +27,10 @@ class Twig implements ServiceProviderInterface
                 'twig.options' => ['cache' => $cache_dir]
             ]
         );
+    }
 
+    public function boot(Application $app)
+    {
         $app['twig']->setLoader(new StoreLoader($app['template.store']));
     }
 }

@@ -16,7 +16,6 @@ class Store implements ServiceProviderInterface
 
     public function boot(Application $app)
     {
-        $factory = new StoreFactory($app['config']);
-        $app['template.store'] = $factory->create();
+        $app['template.store'] = (new StoreFactory($app['config']))->create();
     }
 }

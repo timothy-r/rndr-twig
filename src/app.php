@@ -18,7 +18,7 @@ $app->register(new LogProvider());
 $app->register(new ErrorHandlerProvider());
 
 $app->register(new StoreProvider());
-$app->register(new TwigProvider());
+$app->register(new TwigProvider(__DIR__));
 $app->register(new RouteProvider());
 
 return $app;
