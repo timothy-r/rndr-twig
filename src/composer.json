@@ -2,7 +2,7 @@
     "name": "timrodger/render",
     "description": "Renders templates",
     "require": {
-        "silex/silex": "~2.0@dev",
+        "silex/silex": "1.3",
         "twig/twig": "~2.0@dev",
         "monolog/monolog": "~1.13@dev",
         "predis/predis": "1.1.*@dev"
