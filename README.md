@@ -50,3 +50,9 @@ To view the raw contents of a template make a GET request
     curl http://192.168.59.103:49300/new-template.twig
         
 The response body will be the unrendered template text
+
+## Removing stale templates
+
+To remove a template that's no longer needed make a DELETE request
+
+  curl http://192.168.59.103:49300/old-template.twig
