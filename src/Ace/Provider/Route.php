@@ -19,6 +19,10 @@ class Route implements ServiceProviderInterface
      */
     public function register(Application $app)
     {
+    }
+
+    public function boot(Application $app)
+    {
         /**
          * Respond with the raw template file contents
          */
@@ -74,11 +78,6 @@ class Route implements ServiceProviderInterface
             return new Response('', 200);
 
         })->assert('path', '.+');
-
-    }
-
-    public function boot(Application $app)
-    {
 
     }
 }
