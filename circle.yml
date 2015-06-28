@@ -1,0 +1,6 @@
+general:
+  build_dir: src
+
+test:
+  override:
+    -   phpunit test/
