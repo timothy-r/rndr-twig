@@ -317,12 +317,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Debug.git",
-                "reference": "0e7189372b862af8730b03e6976d23a74157be25"
+                "reference": "d904fd23d391a63d138f8f029c4254de5b1d5d54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Debug/zipball/0e7189372b862af8730b03e6976d23a74157be25",
-                "reference": "0e7189372b862af8730b03e6976d23a74157be25",
+                "url": "https://api.github.com/repos/symfony/Debug/zipball/d904fd23d391a63d138f8f029c4254de5b1d5d54",
+                "reference": "d904fd23d391a63d138f8f029c4254de5b1d5d54",
                 "shasum": ""
             },
             "require": {
@@ -369,7 +369,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2015-06-19 15:09:14"
+            "time": "2015-06-23 18:37:12"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -377,12 +377,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "2f5f776587d59b4808d29a25fffd84e37033e687"
+                "reference": "d7246885b7fe4cb5a2786bda34362d2f0e40b730"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/2f5f776587d59b4808d29a25fffd84e37033e687",
-                "reference": "2f5f776587d59b4808d29a25fffd84e37033e687",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/d7246885b7fe4cb5a2786bda34362d2f0e40b730",
+                "reference": "d7246885b7fe4cb5a2786bda34362d2f0e40b730",
                 "shasum": ""
             },
             "require": {
@@ -427,7 +427,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2015-06-19 15:09:14"
+            "time": "2015-06-24 15:32:32"
         },
         {
             "name": "symfony/http-foundation",
@@ -639,12 +639,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "fe67c5ba3a2418f671307b17adfd8914ffc04b0b"
+                "reference": "2a08a67108404c8af1555bb9316b59f73fe2f076"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/fe67c5ba3a2418f671307b17adfd8914ffc04b0b",
-                "reference": "fe67c5ba3a2418f671307b17adfd8914ffc04b0b",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/2a08a67108404c8af1555bb9316b59f73fe2f076",
+                "reference": "2a08a67108404c8af1555bb9316b59f73fe2f076",
                 "shasum": ""
             },
             "require": {
@@ -688,7 +688,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2015-06-06 23:29:09"
+            "time": "2015-06-24 16:24:55"
         }
     ],
     "packages-dev": [

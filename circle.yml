@@ -7,4 +7,4 @@ machine:
 
 test:
   override:
-    -   phpunit test/
+    - phpunit -c phpunit.xml
