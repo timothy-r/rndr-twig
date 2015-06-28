@@ -41,13 +41,14 @@ To add a template to the service make a PUT request
         -d @template.twig \
         http://192.168.59.103:49300/new-template.twig
         
-The template will be available at http://127.0.0.1/new-template.twig
+The template will be available at http://192.168.59.103/new-template.twig
 
 ## Viewing template contents
 
 To view the raw contents of a template make a GET request
 
-    curl http://192.168.59.103:49300/new-template.twig
+    curl -X GET \
+        http://192.168.59.103:49300/new-template.twig
         
 The response body will be the unrendered template text
 
@@ -55,4 +56,5 @@ The response body will be the unrendered template text
 
 To remove a template that's no longer needed make a DELETE request
 
-  curl http://192.168.59.103:49300/old-template.twig
+    curl -X DELETE \
+        http://192.168.59.103:49300/old-template.twig
