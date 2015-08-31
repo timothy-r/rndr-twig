@@ -35,7 +35,7 @@ class Memory implements StoreInterface
         if (isset($this->data[$path])) {
             return $this->data[$path];
         } else {
-            throw new NotFoundException("Template '$path'' not found");
+            throw new NotFoundException("Template '$path' not found");
         }
     }
 
