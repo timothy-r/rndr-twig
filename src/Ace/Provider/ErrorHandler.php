@@ -1,6 +1,5 @@
 <?php namespace Ace\Provider;
 
-use Ace\Store\NotFoundException;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +20,15 @@ class ErrorHandler implements ServiceProviderInterface
 
             $app['logger']->addError($e->getMessage());
 
-            $code = ($e instanceof NotFoundException) ? 404 : 500;
+            // should really use $e->getCode() but twig's exception codes are hard coded to 0
+            switch (get_class($e)){
+                case 'Twig_Error_Loader':
+                case 'Ace\Store\NotFoundException':
+                    $code = 404;
+                    break;
+                default:
+                    $code = 500;
+            }
 
             return new Response($e->getMessage(), $code);
         });

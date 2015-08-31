@@ -42,14 +42,11 @@ class Route implements ServiceProviderInterface
             $message = new RequestMessage($req);
             $path = '/' . $path;
 
-            try {
-                // Render the template
-                $result = $app['twig']->loadTemplate($path)->render($message->getData());
-                // Ought to try to figure out the response content type
-                return new Response($result, 200);
-            } catch (Exception $ex) {
-                return new Response($ex->getMessage(), 404, ['Content-Type' => 'text/plain']);
-            }
+            // Render the template
+            $result = $app['twig']->loadTemplate($path)->render($message->getData());
+            // Ought to try to figure out the response content type
+            return new Response($result, 200);
+            
         })->assert('path', '.+');
 
         /**

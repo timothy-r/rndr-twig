@@ -21,7 +21,7 @@ class AppErrorTest extends WebTestCase
         $this->givenAClient();
         $this->client->request('POST', '/not/there/template');
 
-        $this->thenTheResponseIs404();
+        $this->thenTheResponseIsError();
     }
 
     public function testPutReturnsErrorWhenUnavailable()

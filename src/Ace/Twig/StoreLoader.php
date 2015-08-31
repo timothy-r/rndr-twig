@@ -5,6 +5,7 @@ use Ace\Store\StoreInterface;
 use Ace\Store\UnavailableException;
 use Twig_LoaderInterface;
 use Twig_Error_Loader;
+use Twig_Error_Runtime;
 
 /**
  * @author timrodger
@@ -70,6 +71,8 @@ class StoreLoader implements Twig_LoaderInterface
         try {
             $this->store->get($name);
             return true;
+        } catch (NotFoundException $nex) {
+            return false;
         } catch (UnavailableException $ex) {
             return false;
         }
@@ -88,7 +91,7 @@ class StoreLoader implements Twig_LoaderInterface
         } catch (NotFoundException $nex) {
             throw new Twig_Error_Loader($nex->getMessage());
         } catch (UnavailableException $ex){
-            throw new Twig_Error_Loader($ex->getMessage());
+            throw new Twig_Error_Runtime($ex->getMessage());
         }
     }
 }

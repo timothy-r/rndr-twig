@@ -1,5 +1,6 @@
 <?php namespace test;
 
+use Ace\Store\NotFoundException;
 use Ace\Store\UnavailableException;
 use Ace\Twig\StoreLoader;
 
@@ -128,7 +129,7 @@ class StoreLoaderUnitTest extends \PHPUnit_Framework_TestCase
         $this->mock_store->expects($this->any())
             ->method('get')
             ->with($name)
-            ->will($this->throwException(new UnavailableException()));
+            ->will($this->throwException(new NotFoundException()));
     }
 
     private function givenAMockStore()
