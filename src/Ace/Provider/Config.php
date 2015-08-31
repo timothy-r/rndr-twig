@@ -11,16 +11,9 @@ use Silex\ServiceProviderInterface;
 class Config implements ServiceProviderInterface
 {
 
-    private $dir;
-
-    public function __construct($dir)
-    {
-        $this->dir = $dir;
-    }
-
     public function register(Application $app)
     {
-        $app['config'] = new Configuration($this->dir);
+        $app['config'] = new Configuration();
     }
 
     public function boot(Application $app)

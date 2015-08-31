@@ -7,24 +7,26 @@ use Silex\ServiceProviderInterface;
 
 /**
  * Provides Twig services to the application
+ * customised to use a template loader that stores templates in redis
  */
 class Twig implements ServiceProviderInterface
 {
-    private $dir;
+    /**
+     * @var string
+     */
+    private $cache_dir;
 
     public function __construct($dir)
     {
-        $this->dir = $dir;
+        $this->cache_dir = $dir;
     }
 
     public function register(Application $app)
     {
-        $cache_dir = $this->dir . '/cache';
-
         $app->register(
             new TwigServiceProvider(),
             [
-                'twig.options' => ['cache' => $cache_dir]
+                'twig.options' => ['cache' => $this->cache_dir]
             ]
         );
     }
