@@ -29,12 +29,9 @@ class Route implements ServiceProviderInterface
         $app->get("{path}", function(Request $req, $path) use ($app){
 
             $path = '/' . $path;
-            try {
-                $template = $app['template.store']->get($path);
-                return new Response($template['content'], 200, ["Content-Type" => $template['type']]);
-            } catch (NotFoundException $ex) {
-                return new Response("Template '$path' not found", 404, ["Content-Type" => 'text/plain']);
-            }
+            $template = $app['template.store']->get($path);
+            return new Response($template['content'], 200, ["Content-Type" => $template['type']]);
+
         })->assert('path', '.+');
 
         /**
