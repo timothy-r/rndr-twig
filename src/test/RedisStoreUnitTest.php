@@ -18,7 +18,7 @@ class RedisStoreUnitTest extends \PHPUnit_Framework_TestCase
         $this->givenAMockClient();
         $this->givenAStore();
 
-        $path = '/template.twig';
+        $path = '/template';
         $content = 'A template body';
         $type = 'text/plain';
         $now = time();
@@ -37,7 +37,7 @@ class RedisStoreUnitTest extends \PHPUnit_Framework_TestCase
         $this->givenAMockClient();
         $this->givenAStore();
 
-        $path = '/template.twig';
+        $path = '/template';
         $content = 'A template body';
         $type = 'text/plain';
         $now = time();
@@ -54,7 +54,7 @@ class RedisStoreUnitTest extends \PHPUnit_Framework_TestCase
         $this->givenAMockClient();
         $this->givenAStore();
 
-        $path = '/template.twig';
+        $path = '/template';
         $content = 'A template body';
         $type = 'text/plain';
         $now = time();
@@ -79,7 +79,7 @@ class RedisStoreUnitTest extends \PHPUnit_Framework_TestCase
         $this->givenAMockClient();
         $this->givenAStore();
 
-        $path = '/template.twig';
+        $path = '/template';
 
         $this->mock_client->expects($this->any())
             ->method('hmget')
@@ -97,7 +97,7 @@ class RedisStoreUnitTest extends \PHPUnit_Framework_TestCase
         $this->givenAMockClient();
         $this->givenAStore();
 
-        $path = '/template.twig';
+        $path = '/template';
 
         $this->mock_client->expects($this->any())
             ->method('hmget')
@@ -111,7 +111,7 @@ class RedisStoreUnitTest extends \PHPUnit_Framework_TestCase
     {
         $this->givenAMockClient();
         $this->givenAStore();
-        $path = '/template.twig';
+        $path = '/template';
 
         $this->mock_client->expects($this->once())
             ->method('del')
@@ -129,7 +129,7 @@ class RedisStoreUnitTest extends \PHPUnit_Framework_TestCase
     {
         $this->givenAMockClient();
         $this->givenAStore();
-        $path = '/template.twig';
+        $path = '/template';
 
         $this->mock_client->expects($this->once())
             ->method('del')

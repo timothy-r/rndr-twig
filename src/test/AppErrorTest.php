@@ -28,7 +28,7 @@ class AppErrorTest extends WebTestCase
     {
         $this->givenAClient();
 
-        $this->client->request('PUT', '/simple.twig', ['name' => 'name'], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
+        $this->client->request('PUT', '/simple', ['name' => 'name'], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
 
         $this->thenTheResponseIsError();
     }
@@ -36,7 +36,7 @@ class AppErrorTest extends WebTestCase
     public function testHeadReturnsErrorWhenUnavailable()
     {
         $this->givenAClient();
-        $this->client->request('HEAD', '/not-a-template.twig');
+        $this->client->request('HEAD', '/not-a-template');
 
         $this->thenTheResponseIsError();
     }
@@ -45,7 +45,7 @@ class AppErrorTest extends WebTestCase
     {
         $this->givenAClient();
 
-        $this->client->request('GET', '/a-template.twig');
+        $this->client->request('GET', '/a-template');
 
         $this->thenTheResponseIsError();
     }
@@ -54,20 +54,14 @@ class AppErrorTest extends WebTestCase
     {
         $this->givenAClient();
 
-        $this->client->request('DELETE', '/a-template.twig');
+        $this->client->request('DELETE', '/a-template');
 
         $this->thenTheResponseIsError();
-
     }
 
     private function givenAClient()
     {
         $this->client = $this->createClient();
-    }
-
-    private function thenTheResponseIs404()
-    {
-        $this->assertSame(404, $this->client->getResponse()->getStatusCode());
     }
 
     private function thenTheResponseIsError()

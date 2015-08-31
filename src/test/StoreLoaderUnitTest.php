@@ -16,7 +16,7 @@ class StoreLoaderUnitTest extends \PHPUnit_Framework_TestCase
 
     public function testLoaderGetsTemplate()
     {
-        $name = 'a-template-file.twig';
+        $name = 'a-template-file';
         $content = 'BODY';
         $this->givenAMockStore();
         $this->givenALoader();
@@ -30,7 +30,7 @@ class StoreLoaderUnitTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoaderThrowsExceptionWhenTemplateIsMissing()
     {
-        $name = 'a-template-file.twig';
+        $name = 'a-template-file';
         $this->givenAMockStore();
         $this->givenALoader();
         $this->givenAMissingTemplate($name);
@@ -40,7 +40,7 @@ class StoreLoaderUnitTest extends \PHPUnit_Framework_TestCase
 
     public function testExistsReturnsTrueWhenStoreHasTemplate()
     {
-        $name = 'a-template-file.twig';
+        $name = 'a-template-file';
         $content = 'BODY';
         $this->givenAMockStore();
         $this->givenALoader();
@@ -51,7 +51,7 @@ class StoreLoaderUnitTest extends \PHPUnit_Framework_TestCase
 
     public function testExistsReturnsFalseWhenStoreDoesNotHaveTemplate()
     {
-        $name = 'a-template-file.twig';
+        $name = 'a-template-file';
         $this->givenAMockStore();
         $this->givenALoader();
         $this->givenAMissingTemplate($name);
@@ -61,7 +61,7 @@ class StoreLoaderUnitTest extends \PHPUnit_Framework_TestCase
 
     public function testIsFreshReturnsComparesLastModifiedProperty()
     {
-        $name = 'a-template-file.twig';
+        $name = 'a-template-file';
         $content = 'BODY';
         $now = time();
 
@@ -78,7 +78,7 @@ class StoreLoaderUnitTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsFreshThrowsExceptionWhenTemplateIsMissing()
     {
-        $name = 'a-template-file.twig';
+        $name = 'a-template-file';
         $now = time();
 
         $this->givenAMockStore();
@@ -90,7 +90,7 @@ class StoreLoaderUnitTest extends \PHPUnit_Framework_TestCase
 
     public function testCacheKeyIsAHash()
     {
-        $name = 'a-template-file.twig';
+        $name = 'a-template-file';
         $content = 'BODY';
         $now = time();
 
@@ -107,7 +107,7 @@ class StoreLoaderUnitTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCacheKeyThrowsExceptionWhenTemplateIsMissing()
     {
-        $name = 'a-template-file.twig';
+        $name = 'a-template-file';
 
         $this->givenAMockStore();
         $this->givenALoader();

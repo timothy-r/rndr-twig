@@ -31,9 +31,9 @@ class AppTest extends WebTestCase
         $body = json_encode(['name' => $name]);
 
         $this->givenAClient();
-        $this->givenATemplateExists('/hello.twig', $template);
+        $this->givenATemplateExists('/hello', $template);
 
-        $this->client->request('POST', '/hello.twig', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
+        $this->client->request('POST', '/hello', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
 
         $this->thenTheResponseIsSuccess();
         $this->assertResponseContents("Hello $name");
@@ -47,9 +47,9 @@ class AppTest extends WebTestCase
         $body = json_encode(['user' => ['name' => $name, 'email' => $email]]);
 
         $this->givenAClient();
-        $this->givenATemplateExists('/complex.twig', $template);
+        $this->givenATemplateExists('/complex', $template);
 
-        $this->client->request('POST', '/complex.twig', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
+        $this->client->request('POST', '/complex', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
 
         $this->thenTheResponseIsSuccess();
         $this->assertResponseContents("User.name: $name User.email: $email");
@@ -61,9 +61,9 @@ class AppTest extends WebTestCase
         $template = 'Hello {{ name }}';
         $body = json_encode(['name' => $name]);
         $this->givenAClient();
-        $this->givenATemplateExists('/sub/hi.twig', $template);
+        $this->givenATemplateExists('/sub/hi', $template);
 
-        $this->client->request('POST', '/sub/hi.twig', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
+        $this->client->request('POST', '/sub/hi', [], [], ['CONTENT_TYPE' => 'application/json'], $body);
 
         $this->thenTheResponseIsSuccess();
         $this->assertResponseContents("Hello $name");
@@ -74,9 +74,9 @@ class AppTest extends WebTestCase
         $name = 'test';
         $template = 'Hello {{ name }}';
         $this->givenAClient();
-        $this->givenATemplateExists('/hello.twig', $template);
+        $this->givenATemplateExists('/hello', $template);
 
-        $this->client->request('POST', '/hello.twig', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
+        $this->client->request('POST', '/hello', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
 
         $this->thenTheResponseIsSuccess();
         $this->assertResponseContents("Hello $name");
@@ -87,9 +87,9 @@ class AppTest extends WebTestCase
         $name = 'test';
         $template = 'Hello {{ name }}';
         $this->givenAClient();
-        $this->givenATemplateExists('/hello.twig', $template);
+        $this->givenATemplateExists('/hello', $template);
 
-        $this->client->request('POST', '/hello.twig', ['name' => $name], [], ['CONTENT_TYPE' => 'multipart/form-data']);
+        $this->client->request('POST', '/hello', ['name' => $name], [], ['CONTENT_TYPE' => 'multipart/form-data']);
 
         $this->thenTheResponseIsSuccess();
         $this->assertResponseContents("Hello $name");
@@ -100,9 +100,9 @@ class AppTest extends WebTestCase
         $name = 'test';
         $template = 'Hello {{ name }}';
         $this->givenAClient();
-        $this->givenATemplateExists('/hello.twig', $template);
+        $this->givenATemplateExists('/hello', $template);
 
-        $this->client->request('POST', "/hello.twig?name=$name");
+        $this->client->request('POST', "/hello?name=$name");
 
         $this->thenTheResponseIsSuccess();
         $this->assertResponseContents("Hello $name");
@@ -113,11 +113,11 @@ class AppTest extends WebTestCase
         $name = 'fork';
         $template = 'A simple template with name: {{ name }}';
         $this->givenAClient();
-        $this->givenATemplateExists('/simple.twig', $template);
+        $this->givenATemplateExists('/simple', $template);
 
         $this->thenTheResponseIsSuccess();
 
-        $this->client->request('POST', '/simple.twig', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
+        $this->client->request('POST', '/simple', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
 
         $this->thenTheResponseIsSuccess();
         $this->assertResponseContents("A simple template with name: $name");
@@ -127,11 +127,11 @@ class AppTest extends WebTestCase
     {
         $template = 'A simple template with name: {{ name }}';
         $this->givenAClient();
-        $this->givenATemplateExists('/simple.twig', $template);
+        $this->givenATemplateExists('/simple', $template);
         $this->thenTheResponseIsSuccess();
 
         $body = 'A new template with name: {{ name }}';
-        $this->client->request('PUT', '/simple.twig', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
+        $this->client->request('PUT', '/simple', [], [], ['CONTENT_TYPE' => 'text/twig'], $body);
         $this->thenTheResponseIsSuccess();
     }
 
@@ -140,11 +140,11 @@ class AppTest extends WebTestCase
         $name = 'fork';
         $template = 'A simple template with name: {{ name }}';
         $this->givenAClient();
-        $this->givenATemplateExists('/module/sub-module/simple.twig', $template);
+        $this->givenATemplateExists('/module/sub-module/simple', $template);
 
         $this->thenTheResponseIsSuccess();
 
-        $this->client->request('POST', '/module/sub-module/simple.twig', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
+        $this->client->request('POST', '/module/sub-module/simple', ['name' => $name], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
 
         $this->thenTheResponseIsSuccess();
         $this->assertResponseContents("A simple template with name: $name");
@@ -153,7 +153,7 @@ class AppTest extends WebTestCase
     public function testHeadReturns404WhenTemplateDoesNotExist()
     {
         $this->givenAClient();
-        $this->client->request('HEAD', '/not-a-template.twig');
+        $this->client->request('HEAD', '/not-a-template');
         $this->thenTheResponseIs404();
     }
 
@@ -161,9 +161,9 @@ class AppTest extends WebTestCase
     {
         $template = 'A simple template with name: {{ name }}';
         $this->givenAClient();
-        $this->givenATemplateExists('/a-template.twig', $template);
+        $this->givenATemplateExists('/a-template', $template);
 
-        $this->client->request('HEAD', '/a-template.twig');
+        $this->client->request('HEAD', '/a-template');
 
         $this->thenTheResponseIsSuccess();
     }
@@ -172,9 +172,9 @@ class AppTest extends WebTestCase
     {
         $template = 'A simple template with name: {{ name }}';
         $this->givenAClient();
-        $this->givenATemplateExists('/a-template.twig', $template);
+        $this->givenATemplateExists('/a-template', $template);
 
-        $this->client->request('GET', '/a-template.twig');
+        $this->client->request('GET', '/a-template');
 
         $this->thenTheResponseIsSuccess();
         $this->assertResponseContents($template);
@@ -184,13 +184,13 @@ class AppTest extends WebTestCase
     {
         $template = 'A simple template with name: {{ name }}';
         $this->givenAClient();
-        $this->givenATemplateExists('/a-template.twig', $template);
+        $this->givenATemplateExists('/a-template', $template);
 
-        $this->client->request('DELETE', '/a-template.twig');
+        $this->client->request('DELETE', '/a-template');
 
         $this->thenTheResponseIsSuccess();
 
-        $this->client->request('HEAD', '/a-template.twig');
+        $this->client->request('HEAD', '/a-template');
         $this->thenTheResponseIs404();
     }
 
@@ -198,10 +198,10 @@ class AppTest extends WebTestCase
     {
         $this->givenAClient();
 
-        $this->client->request('HEAD', '/a-missing-template.twig');
+        $this->client->request('HEAD', '/a-missing-template');
         $this->thenTheResponseIs404();
 
-        $this->client->request('DELETE', '/a-missing-template.twig');
+        $this->client->request('DELETE', '/a-missing-template');
 
         $this->thenTheResponseIsSuccess();
     }
