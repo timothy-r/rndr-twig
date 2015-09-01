@@ -6,6 +6,8 @@ use Monolog\Handler\ErrorLogHandler;
 use Silex\ServiceProviderInterface;
 
 /**
+ * @obsolete
+ *
  * @author timrodger
  * Date: 07/06/15
  */
