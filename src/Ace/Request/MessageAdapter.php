@@ -3,10 +3,10 @@
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @author timrodger
- * Date: 29/03/15
+ * Provides access to a Request's data as an assoc array
+ * Accepts form data, json and query parameters
  */
-class Message
+class MessageAdapter
 {
     /**
      * @var Request
@@ -27,9 +27,14 @@ class Message
         $req_vars = [];
 
         switch($this->request->headers->get('Content-Type')) {
+
             case 'application/json':
                 $req_vars = json_decode($this->request->getContent(), 1);
+                if (!is_array($req_vars)){
+                    $req_vars = [];
+                }
                 break;
+
             case 'application/x-www-form-urlencoded':
             case 'multipart/form-data':
                 $req_vars = $this->request->request->all();
@@ -37,6 +42,7 @@ class Message
         }
 
         $query = $this->request->query->all();
+
         if (is_array($query)) {
             // values in $req_vars overwrite those in $query
             $req_vars = array_merge($query, $req_vars);

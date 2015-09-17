@@ -5,7 +5,7 @@ use Silex\ServiceProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use Ace\Request\Message as RequestMessage;
+use Ace\Request\MessageAdapter as RequestMessage;
 use Ace\Store\NotFoundException;
 use Exception;
 

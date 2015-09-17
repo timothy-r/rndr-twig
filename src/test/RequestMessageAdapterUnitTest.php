@@ -1,13 +1,13 @@
 <?php namespace test; 
 
-use Ace\Request\Message as RequestMessage;
+use Ace\Request\MessageAdapter as RequestMessage;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author timrodger
  * Date: 29/03/15
  */
-class RequestMessageUnitTest extends \PHPUnit_Framework_TestCase
+class RequestMessageAdapterUnitTest extends \PHPUnit_Framework_TestCase
 {
     private $request;
 
@@ -19,6 +19,13 @@ class RequestMessageUnitTest extends \PHPUnit_Framework_TestCase
         $this->givenARequest('application/json', [], [], json_encode($data));
         $this->givenAMessage();
         $this->assertDataEquals($data);
+    }
+
+    public function testGetJsonDataReturnsEmptyArrayForBrokenJson()
+    {
+        $this->givenARequest('application/json', [], [], 'not a json string');
+        $this->givenAMessage();
+        $this->assertDataEquals([]);
     }
 
     public function testGetFormUrlEncodedData()
