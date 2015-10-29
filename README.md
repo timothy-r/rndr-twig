@@ -1,5 +1,4 @@
-# render
-A service that renders templates
+# A service that renders templates
 
 ## Example
 
