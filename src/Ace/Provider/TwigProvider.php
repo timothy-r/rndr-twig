@@ -9,7 +9,7 @@ use Silex\ServiceProviderInterface;
  * Provides Twig services to the application
  * customised to use a template loader that stores templates in redis
  */
-class Twig implements ServiceProviderInterface
+class TwigProvider implements ServiceProviderInterface
 {
 
     public function register(Application $app)

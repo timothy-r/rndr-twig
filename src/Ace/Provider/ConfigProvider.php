@@ -8,7 +8,7 @@ use Silex\ServiceProviderInterface;
  * @author timrodger
  * Date: 23/06/15
  */
-class Config implements ServiceProviderInterface
+class ConfigProvider implements ServiceProviderInterface
 {
     /**
      * @var string
