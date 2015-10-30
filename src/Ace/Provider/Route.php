@@ -27,6 +27,8 @@ class Route implements ServiceProviderInterface
          */
         $app->get("{path}", function(Request $req, $path) use ($app){
 
+            $app['logger']->info("Getting template for '$path'");
+
             $path = '/' . $path;
             $template = $app['template.store']->get($path);
             return new Response($template['content'], 200, ["Content-Type" => $template['type']]);
@@ -37,6 +39,8 @@ class Route implements ServiceProviderInterface
          * Render the template specified by path using the request data
          */
         $app->post("{path}", function(Request $req, $path) use ($app){
+
+            $app['logger']->info("Rendering template for '$path'");
 
             $message = new RequestMessage($req);
             $path = '/' . $path;
@@ -53,6 +57,8 @@ class Route implements ServiceProviderInterface
          */
         $app->put("{path}", function(Request $req, $path) use ($app) {
 
+            $app['logger']->info("Setting template for '$path'");
+
             $path = '/' . $path;
             $app['template.store']->set($path, $req->getContent(), $req->headers->get('Content-Type'));
 
@@ -68,6 +74,8 @@ class Route implements ServiceProviderInterface
          * Removes a template
          */
         $app->delete("{path}", function($path) use ($app) {
+
+            $app['logger']->info("Removing template for '$path'");
 
             $path = '/' . $path;
             $app['template.store']->delete($path);
