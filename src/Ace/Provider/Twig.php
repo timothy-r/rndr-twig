@@ -11,22 +11,15 @@ use Silex\ServiceProviderInterface;
  */
 class Twig implements ServiceProviderInterface
 {
-    /**
-     * @var string
-     */
-    private $cache_dir;
-
-    public function __construct($dir)
-    {
-        $this->cache_dir = $dir;
-    }
 
     public function register(Application $app)
     {
+        $cache_dir = $app['config']->getTemplateCacheDir();
+
         $app->register(
             new TwigServiceProvider(),
             [
-                'twig.options' => ['cache' => $this->cache_dir]
+                'twig.options' => ['cache' => $cache_dir]
             ]
         );
     }

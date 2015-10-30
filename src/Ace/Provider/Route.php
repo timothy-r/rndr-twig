@@ -56,7 +56,7 @@ class Route implements ServiceProviderInterface
 
             $path = '/' . $path;
             $app['template.store']->set($path, $req->getContent(), $req->headers->get('Content-Type'));
-
+            // clear the cache here
             return new Response('', 200);
 
         })->assert('path', '.+');

@@ -10,10 +10,19 @@ use Silex\ServiceProviderInterface;
  */
 class Config implements ServiceProviderInterface
 {
+    /**
+     * @var string
+     */
+    private $template_cache;
+
+    public function __construct($template_cache)
+    {
+        $this->template_cache = $template_cache;
+    }
 
     public function register(Application $app)
     {
-        $app['config'] = new Configuration();
+        $app['config'] = new Configuration($this->template_cache);
     }
 
     public function boot(Application $app)

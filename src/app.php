@@ -13,7 +13,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 $app = new Application();
 
-$app->register(new ConfigProvider());
+$app->register(new ConfigProvider(__DIR__ . '/cache'));
 
 $app->register(new MonologServiceProvider());
 $app['monolog.logfile'] = "php://stdout";
@@ -23,8 +23,7 @@ $app->register(new ErrorHandlerProvider());
 
 $app->register(new StoreProvider());
 
-// pass cache directory to the TwigProvider - use an env var to control this
-$app->register(new TwigProvider(__DIR__ . '/cache'));
+$app->register(new TwigProvider());
 $app->register(new RouteProvider());
 
 return $app;
