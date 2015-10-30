@@ -150,6 +150,25 @@ class AppTest extends WebTestCase
         $this->assertResponseContents("A simple template with name: $name");
     }
 
+    public function testIncludingATemplate()
+    {
+        $this->givenAClient();
+
+        $base = '<html><body>{% include "/html/navigation/menu" %}</body></html>';
+        $this->givenATemplateExists('/html/pages/base', $base);
+
+        $menu = '<ul><li>One</li><li>Toe</li></ul>';
+        $this->givenATemplateExists('/html/navigation/menu', $menu);
+
+        $this->client->request('POST', '/html/pages/base');
+        $this->assertResponseContents("<html><body><ul><li>One</li><li>Toe</li></ul></body></html>");
+    }
+
+    public function testExtendingATemplate()
+    {
+
+    }
+
     public function testHeadReturns404WhenTemplateDoesNotExist()
     {
         $this->givenAClient();
