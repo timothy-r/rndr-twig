@@ -1,13 +1,12 @@
 <?php namespace Ace\Provider;
 
+use Ace\Cache;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use Ace\Request\MessageAdapter as RequestMessage;
-use Ace\Store\NotFoundException;
-use Exception;
 
 /**
  * Configures routing
@@ -56,7 +55,11 @@ class Route implements ServiceProviderInterface
 
             $path = '/' . $path;
             $app['template.store']->set($path, $req->getContent(), $req->headers->get('Content-Type'));
+
             // clear the cache here
+            $cache = new Cache($app['config']->getTemplateCacheDir());
+            $cache->clear($path);
+
             return new Response('', 200);
 
         })->assert('path', '.+');
