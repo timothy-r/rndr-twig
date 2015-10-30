@@ -9,11 +9,11 @@ class Configuration
     /**
      * @var string
      */
-    private $template_cache;
+    private $root_dir;
 
-    public function __construct($template_cache)
+    public function __construct($root_dir)
     {
-        $this->template_cache = $template_cache;
+        $this->root_dir = $root_dir;
     }
 
     /**
@@ -30,6 +30,14 @@ class Configuration
      */
     public function getTemplateCacheDir()
     {
-        return $this->template_cache;
+        return $this->root_dir . '/cache';
+    }
+
+    /**
+     * @return string
+     */
+    public function getTranslationDir()
+    {
+        return $this->root_dir . '/translations';
     }
 }
