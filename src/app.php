@@ -3,11 +3,11 @@
 use Silex\Application;
 use Silex\Provider\MonologServiceProvider;
 
-use Ace\Provider\Config as ConfigProvider;
-use Ace\Provider\Store as StoreProvider;
-use Ace\Provider\Twig as TwigProvider;
-use Ace\Provider\Route as RouteProvider;
-use Ace\Provider\ErrorHandler as ErrorHandlerProvider;
+use Ace\Provider\ConfigProvider;
+use Ace\Provider\StoreProvider;
+use Ace\Provider\TwigProvider;
+use Ace\Provider\RouteProvider;
+use Ace\Provider\ErrorHandlerProvider;
 
 require_once __DIR__ . '/vendor/autoload.php';
 

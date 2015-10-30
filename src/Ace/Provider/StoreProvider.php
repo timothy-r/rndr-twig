@@ -7,7 +7,7 @@ use Silex\ServiceProviderInterface;
 /**
  * Provides the store for the application
  */
-class Store implements ServiceProviderInterface
+class StoreProvider implements ServiceProviderInterface
 {
 
     public function register(Application $app)

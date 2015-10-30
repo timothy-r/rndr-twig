@@ -8,7 +8,7 @@ use Exception;
 /**
  * Handles exceptions
  */
-class ErrorHandler implements ServiceProviderInterface
+class ErrorHandlerProvider implements ServiceProviderInterface
 {
     public function register(Application $app)
     {

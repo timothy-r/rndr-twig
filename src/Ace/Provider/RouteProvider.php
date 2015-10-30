@@ -11,7 +11,7 @@ use Ace\Request\MessageAdapter as RequestMessage;
 /**
  * Configures routing
  */
-class Route implements ServiceProviderInterface
+class RouteProvider implements ServiceProviderInterface
 {
     /**
      * @param Application $app
