@@ -65,7 +65,7 @@ class Redis implements StoreInterface
     {
 
     }
-    
+
     /**
      * Remove the named template
      *

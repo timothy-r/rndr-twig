@@ -225,6 +225,27 @@ class AppTest extends WebTestCase
         $this->thenTheResponseIsSuccess();
     }
 
+    public function testListRespondsWithArrayOfTemplates()
+    {
+        $this->givenAClient();
+
+        $template_path_1 = '/path/to/a-template';
+        $template = 'A simple template with name: {{ name }}';
+
+        $this->givenATemplateExists($template_path_1, $template);
+
+        $template_path_2 = '/path/to/another-template';
+        $template = 'Another template with var: {{ me }}';
+
+        $this->givenATemplateExists($template_path_2, $template);
+
+        $this->client->request('GET', '/');
+
+        $this->thenTheResponseIsSuccess();
+
+        $this->assertResponseContents(json_encode([$template_path_1, $template_path_2], JSON_UNESCAPED_SLASHES));
+    }
+
     private function givenAClient()
     {
         $this->client = $this->createClient();
