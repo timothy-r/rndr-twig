@@ -63,7 +63,18 @@ class Redis implements StoreInterface
      */
     public function listAll()
     {
+        $templates = [];
+        $cursor = 0;
+        while(true) {
+            $result = $this->client->scan($cursor);
+            $cursor = array_shift($result);
+            $templates = array_merge($templates, $result);
+            if (intval($cursor == 0)){
+                break;
+            }
+        }
 
+        return $templates;
     }
 
     /**

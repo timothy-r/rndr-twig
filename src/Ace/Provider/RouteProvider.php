@@ -23,6 +23,18 @@ class RouteProvider implements ServiceProviderInterface
     public function boot(Application $app)
     {
         /**
+         * Respond with a list of template paths
+         */
+        $app->get("/", function(Request $req) use ($app){
+
+            $app['logger']->info("Getting list of templates");
+
+            $templates = $app['template.store']->listAll();
+            return new Response(json_encode($templates, JSON_UNESCAPED_SLASHES), 200, ["Content-Type" => 'application/json']);
+
+        });
+
+        /**
          * Respond with the raw template file contents
          */
         $app->get("{path}", function(Request $req, $path) use ($app){

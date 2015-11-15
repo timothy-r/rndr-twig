@@ -139,11 +139,23 @@ class RedisStoreUnitTest extends \PHPUnit_Framework_TestCase
         $this->store->delete($path);
     }
 
+    public function testListAllReturnsAllTemplates()
+    {
+        $this->givenAMockClient();
+        $this->givenAStore();
+        $this->mock_client->expects($this->any())
+            ->method('scan')
+            ->will($this->onConsecutiveCalls(['11', 'template-one', 'template-two'], ['0', 'template-three']));
+
+        $templates = $this->store->listAll();
+
+        $this->assertSame(['template-one', 'template-two', 'template-three'], $templates);
+    }
 
     private function givenAMockClient()
     {
         $this->mock_client = $this->getMockBuilder('Predis\Client')
-            ->setMethods(['hmset', 'hmget', 'del'])
+            ->setMethods(['hmset', 'hmget', 'del', 'scan'])
             ->disableOriginalConstructor()
             ->getMock();
     }
