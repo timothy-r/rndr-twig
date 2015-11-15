@@ -29,6 +29,14 @@ class Unavailable implements StoreInterface
         throw new UnavailableException('Store is not available');
     }
 
+    /**
+     * @return array
+     */
+    public function listAll()
+    {
+
+    }
+
     public function delete($path)
     {
         throw new UnavailableException('Store is not available');

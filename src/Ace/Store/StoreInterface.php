@@ -10,5 +10,7 @@ interface StoreInterface
 
     public function get($path);
 
+    public function listAll();
+
     public function delete($path);
 }

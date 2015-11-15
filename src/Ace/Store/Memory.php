@@ -39,6 +39,14 @@ class Memory implements StoreInterface
         }
     }
 
+    /**
+     * @return array
+     */
+    public function listAll()
+    {
+
+    }
+
     public function delete($path)
     {
         unset($this->data[$path]);

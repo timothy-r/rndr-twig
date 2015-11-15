@@ -59,6 +59,14 @@ class Redis implements StoreInterface
     }
 
     /**
+     * @return array
+     */
+    public function listAll()
+    {
+
+    }
+    
+    /**
      * Remove the named template
      *
      * @param $path
