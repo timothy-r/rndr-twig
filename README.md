@@ -7,23 +7,23 @@ Run the app in a docker container to make redis available
     docker-compose build
     docker-compose up
 
-Make a request to render the hello.twig template with name set to 'Brian' (requires the hello.twig template to have been uploaded)
+Make a request to render the hello.twig template with the variable name set to 'Brian' (requires the hello.twig template to have been uploaded)
 
     curl -X POST \
         -d '{"name":"Brian"}' \
         -H "Content-Type: application/json" \
         http://192.168.59.103:49300/hello.twig
     
-The response will be the result of rendering the template file named "hello.twig" with the variable $name set to "Brian"
+The response will be the result of rendering the template file named "hello.twig" with the variable name set to 'Brian'
 
-Or if you would prefer to use a different content type to send the data
+Or POST form data
 
     curl -X POST \
         -d "name=Brian" \
         -H "Content-Type: application/x-www-form-urlencoded" \
         http://192.168.59.103:49300/hello.twig
     
-Or even
+Or query parameters
     
     curl -X POST \
         http://192.168.59.103:49300/hello.twig?name=Brian
